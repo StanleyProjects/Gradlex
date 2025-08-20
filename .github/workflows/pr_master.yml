@@ -1,0 +1,12 @@
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: |
+          echo 'Not implemented!'; exit 1

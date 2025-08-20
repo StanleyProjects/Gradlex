@@ -1,5 +1,7 @@
 package sp.kx.gradlex
 
+import org.gradle.api.file.RegularFile
+import java.io.File
 import java.net.URI
 import java.util.Objects
 
@@ -16,6 +18,19 @@ object GitHub {
 
         fun pages(): URI {
             return URI("https://$owner.github.io/$name")
+        }
+
+        fun assemble(version: String, target: RegularFile): File {
+            require(version.isNotBlank()) { "The version is blank!" }
+            val file = target.asFile
+            val text = """
+                repository:
+                 owner: '$owner'
+                 name: '$name'
+                version: '$version'
+            """.trimIndent()
+            file.assemble(text)
+            return file
         }
 
         override fun toString(): String {

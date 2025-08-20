@@ -1,5 +1,6 @@
 package sp.kx.gradlex
 
+import org.gradle.api.file.RegularFile
 import java.io.File
 
 private fun checkLines(actual: List<String>, expected: Set<String>): Set<String> {
@@ -59,4 +60,26 @@ fun File.check(
     """.trimIndent()
     report.writeText(text)
     error("Problems were found while checking the \"$name\". See the report ${report.absolutePath}")
+}
+
+fun File.file(): File {
+    check(isFile) { "Location \"$absolutePath\" is not a file!" }
+    return this
+}
+
+fun File.assemble(text: String) {
+    require(text.isNotEmpty())
+    if (exists()) {
+        file()
+        check(delete()) { "Failed to delete \"$absolutePath\" file!" }
+    } else {
+        parentFile?.mkdirs() ?: error("File \"$name\" has no parent!")
+    }
+    writeText(text)
+}
+
+fun RegularFile.assemble(text: String): File {
+    val file = asFile
+    file.assemble(text)
+    return file
 }

@@ -1,5 +1,5 @@
-import sp.kx.gradlex.asFile
 import sp.gx.core.buildDir
+import sp.kx.gradlex.asFile
 import sp.kx.gradlex.buildSrc
 import sp.kx.gradlex.check
 

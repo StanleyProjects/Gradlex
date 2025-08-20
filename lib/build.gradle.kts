@@ -2,16 +2,16 @@ import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import sp.gx.core.GitHub
 import sp.gx.core.Maven
-import sp.kx.gradlex.asFile
 import sp.gx.core.assemble
 import sp.gx.core.buildDir
-import sp.kx.gradlex.buildSrc
-import sp.kx.gradlex.check
 import sp.gx.core.create
 import sp.gx.core.dir
 import sp.gx.core.eff
 import sp.gx.core.getByName
 import sp.gx.core.task
+import sp.kx.gradlex.asFile
+import sp.kx.gradlex.buildSrc
+import sp.kx.gradlex.check
 
 version = "0.0.2"
 

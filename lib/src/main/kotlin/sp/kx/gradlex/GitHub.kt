@@ -20,6 +20,11 @@ object GitHub {
             return URI("https://$owner.github.io/$name")
         }
 
+        fun release(version: String): URI {
+            require(version.isNotBlank()) { "The version is blank!" }
+            return URI("https://github.com/$owner/$name/releases/tag/$version")
+        }
+
         fun assemble(version: String, target: RegularFile): File {
             require(version.isNotBlank()) { "The version is blank!" }
             val file = target.asFile

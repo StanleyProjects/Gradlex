@@ -1,5 +1,6 @@
 package sp.kx.gradlex
 
+import java.net.URI
 import java.util.Objects
 
 object GitHub {
@@ -7,6 +8,14 @@ object GitHub {
         init {
             require(owner.isNotBlank()) { "The owner is blank!" }
             require(name.isNotBlank()) { "The name is blank!" }
+        }
+
+        fun uri(): URI {
+            return URI("https://github.com/$owner/$name")
+        }
+
+        fun pages(): URI {
+            return URI("https://$owner.github.io/$name")
         }
 
         override fun toString(): String {

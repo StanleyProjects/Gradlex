@@ -5,7 +5,7 @@ import sp.gx.core.Maven
 import sp.kx.gradlex.asFile
 import sp.gx.core.assemble
 import sp.gx.core.buildDir
-import sp.gx.core.buildSrc
+import sp.kx.gradlex.buildSrc
 import sp.kx.gradlex.check
 import sp.gx.core.create
 import sp.gx.core.dir

@@ -7,7 +7,7 @@ A few Gradle extensions.
 
 > GitHub [0.0.5u-SNAPSHOT](https://github.com/StanleyProjects/Gradlex/releases/tag/0.0.5u-SNAPSHOT) release
 > 
-> Maven [metadata](https://central.sonatype.com/repository/com/github/kepocnhh/Gradlex/maven-metadata.xml)
+> Maven [metadata](https://central.sonatype.com/repository/maven-snapshots/com/github/kepocnhh/Gradlex/maven-metadata.xml)
 
 ### Build
 ```

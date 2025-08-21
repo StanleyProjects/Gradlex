@@ -13,6 +13,7 @@ import sp.kx.gradlex.create
 import sp.kx.gradlex.dir
 import sp.kx.gradlex.eff
 import sp.kx.gradlex.get
+import java.net.URI
 
 version = "0.0.6"
 
@@ -182,7 +183,8 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
         doLast {
             val expected = setOf(
                 "GitHub ${Markdown.link(text = version, uri = gh.release(version = version))}",
-                "Maven ${Markdown.link("metadata", Maven.Snapshot.metadata(group = maven.group, id = maven.id))}",
+                "Maven ${Markdown.link("metadata", URI("https://central.sonatype.com/repository/maven-snapshots/com/github/kepocnhh/Gradlex/maven-metadata.xml"))}", // todo
+//                "Maven ${Markdown.link("metadata", Maven.Snapshot.metadata(group = maven.group, id = maven.id))}",
                 "maven(\"${Maven.Snapshot.Host}\")",
                 "implementation(\"${maven.moduleName(version = version)}\")",
             )

@@ -66,8 +66,9 @@ object Maven {
             require(name.isNotBlank()) { "The name is blank!" }
             require(description.isNotBlank()) { "The description is blank!" }
             require(tag.isNotBlank()) { "The tag is blank!" }
-            require(licenses.isEmpty()) { "No developers!" }
-            require(developers.isEmpty()) { "No developers!" }
+            require(licenses.isNotEmpty()) { "No licenses!" }
+            require(developers.isNotEmpty()) { "No developers!" }
+            if (developers.any { it.isBlank() }) error("Wrong developers!")
             val host = "http://maven.apache.org"
             val url = "$host/POM/$modelVersion"
             val project = setOf(

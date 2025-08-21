@@ -135,18 +135,9 @@ task<Detekt>("checkCodeQuality") {
 fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Repository) {
     tasks.create("assemble", variant, "MavenMetadata") {
         doLast {
-            val file = buildDir()
-                .dir("yml")
-                .file("maven-metadata.yml")
-                .assemble(
-                    """
-                        repository:
-                         groupId: '${maven.group}'
-                         artifactId: '${maven.id}'
-                        version: '$version'
-                    """.trimIndent(),
-                )
-            println("Metadata: ${file.absolutePath}")
+            val target = buildDir().dir("yml").file("maven-metadata.yml")
+            val file = maven.assemble(version = version, target = target)
+            println("Maven metadata: ${file.absolutePath}")
         }
     }
     tasks.add<Jar>("assemble", variant, "Jar") {

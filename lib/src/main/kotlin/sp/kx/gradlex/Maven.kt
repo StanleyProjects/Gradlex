@@ -2,6 +2,7 @@ package sp.kx.gradlex
 
 import org.gradle.api.file.RegularFile
 import java.io.File
+import java.net.URI
 
 object Maven {
     class Artifact(val group: String, val id: String) {
@@ -65,6 +66,19 @@ object Maven {
                 version: '$version'
             """.trimIndent()
             return target.assemble(text)
+        }
+    }
+
+    object Snapshot {
+        val Host = URI("https://central.sonatype.com/repository/maven-snapshots")
+
+        fun metadata(
+            group: String,
+            id: String,
+        ): URI {
+            require(group.isNotBlank()) { "The group ID is blank!" }
+            require(id.isNotBlank()) { "The artifact ID is blank!" }
+            return Host.resolve("${group.replace('.', '/')}/$id/maven-metadata.xml")
         }
     }
 }

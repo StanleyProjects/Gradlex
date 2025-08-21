@@ -6,8 +6,8 @@ A few Gradle extensions.
 ## Unstable
 
 > GitHub [0.0.5u-SNAPSHOT](https://github.com/StanleyProjects/Gradlex/releases/tag/0.0.5u-SNAPSHOT) release
->
-> ...there should be a link to [Maven](https://central.sonatype.com) here
+> 
+> Maven [metadata](https://central.sonatype.com/repository/com/github/kepocnhh/Gradlex/maven-metadata.xml)
 
 ### Build
 ```

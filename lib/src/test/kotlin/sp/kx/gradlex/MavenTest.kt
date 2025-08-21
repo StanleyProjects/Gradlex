@@ -94,4 +94,14 @@ internal class MavenTest {
             "</project>"
         assertEquals(expected, actual)
     }
+
+    @Test
+    fun snapshotMetadataTest() {
+        val group = "com.github.foo"
+        val id = "bar"
+        val issuer = Maven.Artifact(group = group, id = id)
+        val actual = Maven.Snapshot.metadata(artifact = issuer)
+        val expected = URI("https://central.sonatype.com/repository/maven-snapshots/com/github/foo/$id/maven-metadata.xml")
+        assertEquals(expected, actual)
+    }
 }

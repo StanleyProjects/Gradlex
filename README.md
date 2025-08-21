@@ -5,7 +5,7 @@ A few Gradle extensions.
 
 ## Unstable
 
-> GitHub [0.0.3u-SNAPSHOT](https://github.com/StanleyProjects/Gradlex/releases/tag/0.0.3u-SNAPSHOT) release
+> GitHub [0.0.4u-SNAPSHOT](https://github.com/StanleyProjects/Gradlex/releases/tag/0.0.4u-SNAPSHOT) release
 >
 > ...there should be a link to [Maven](https://central.sonatype.com) here
 
@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.kepocnhh:Gradlex:0.0.3u-SNAPSHOT")
+    implementation("com.github.kepocnhh:Gradlex:0.0.4u-SNAPSHOT")
 }
 ```
 

@@ -7,6 +7,17 @@ inline fun <reified T : Task> TaskContainer.get(
     nameSegment: String,
     secondNameSegment: String,
     vararg otherNameSegments: String,
+): T {
+    val name = camelCase(camelCase(nameSegment, secondNameSegment), *otherNameSegments)
+    val task = getByName(name)
+    check(task is T)
+    return task
+}
+
+inline fun <reified T : Task> TaskContainer.get(
+    nameSegment: String,
+    secondNameSegment: String,
+    vararg otherNameSegments: String,
     noinline block: T.() -> Unit,
 ): T {
     val name = camelCase(camelCase(nameSegment, secondNameSegment), *otherNameSegments)

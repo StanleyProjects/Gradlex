@@ -1,11 +1,12 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import sp.gx.core.Maven
 import sp.gx.core.create
 import sp.gx.core.eff
 import sp.gx.core.getByName
 import sp.gx.core.task
 import sp.kx.gradlex.GitHub
+import sp.kx.gradlex.Markdown
+import sp.kx.gradlex.Maven
 import sp.kx.gradlex.asFile
 import sp.kx.gradlex.assemble
 import sp.kx.gradlex.buildDir
@@ -189,10 +190,10 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
     tasks.create("check", variant, "Readme") {
         doLast {
             val expected = setOf(
-                "GitHub [$version](${gh.release(version = version)})", // todo link
+                "GitHub ${Markdown.link(text = version, uri = gh.release(version = version))}",
 //                Markdown.link("Maven", Maven.Snapshot.url(maven, version)), // todo maven url
                 "maven(\"https://central.sonatype.com/repository/maven-snapshots\")", // todo maven import
-                "implementation(\"${maven.moduleName(version)}\")",
+                "implementation(\"${maven.moduleName(version = version)}\")",
             )
             rootDir.resolve("README.md").check(
                 expected = expected,
@@ -213,7 +214,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
                 "GitHub [$version](https://github.com/${gh.owner}/${gh.name}/releases/tag/$version)", // todo GitHub release
 //                Markdown.link("Maven", Maven.Snapshot.url(maven, version)), // todo maven url
                 "maven(\"https://central.sonatype.com/repository/maven-snapshots\")", // todo maven import
-                "implementation(\"${maven.moduleName(version)}\")",
+                "implementation(\"${maven.moduleName(version = version)}\")",
             )
             rootDir.resolve("README.md").check(
                 expected = expected,

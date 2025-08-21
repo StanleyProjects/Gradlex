@@ -50,12 +50,12 @@ internal class MavenTest {
         )
         val modelVersion = "4.0.0"
         val expected = """<project xsi:schemaLocation="http://maven.apache.org/POM/$modelVersion http://maven.apache.org/xsd/maven-$modelVersion.xsd" xmlns="http://maven.apache.org/POM/$modelVersion" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">""" +
-                "<modelVersion>$modelVersion</modelVersion>" +
-                "<groupId>$group</groupId>" +
-                "<artifactId>$id</artifactId>" +
-                "<version>$version</version>" +
-                "<packaging>$packaging</packaging>" +
-                "</project>"
+            "<modelVersion>$modelVersion</modelVersion>" +
+            "<groupId>$group</groupId>" +
+            "<artifactId>$id</artifactId>" +
+            "<version>$version</version>" +
+            "<packaging>$packaging</packaging>" +
+            "</project>"
         assertEquals(expected, actual)
     }
 
@@ -80,18 +80,18 @@ internal class MavenTest {
         )
         val modelVersion = "4.0.0"
         val expected = """<project xsi:schemaLocation="http://maven.apache.org/POM/$modelVersion http://maven.apache.org/xsd/maven-$modelVersion.xsd" xmlns="http://maven.apache.org/POM/$modelVersion" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">""" +
-                "<modelVersion>$modelVersion</modelVersion>" +
-                "<groupId>$group</groupId>" +
-                "<artifactId>$id</artifactId>" +
-                "<version>$version</version>" +
-                "<packaging>$packaging</packaging>" +
-                "<name>$id</name>" +
-                "<description>$id</description>" +
-                "<url>$uri</url>" +
-                "<licenses><license><url>$license</url></license></licenses>" +
-                "<scm><tag>$version</tag><url>$scm</url></scm>" +
-                "<developers><developer><name>$developer</name></developer></developers>" +
-                "</project>"
+            "<modelVersion>$modelVersion</modelVersion>" +
+            "<groupId>$group</groupId>" +
+            "<artifactId>$id</artifactId>" +
+            "<version>$version</version>" +
+            "<packaging>$packaging</packaging>" +
+            "<name>$id</name>" +
+            "<description>$id</description>" +
+            "<url>$uri</url>" +
+            "<licenses><license><url>$license</url></license></licenses>" +
+            "<scm><tag>$version</tag><url>$scm</url></scm>" +
+            "<developers><developer><name>$developer</name></developer></developers>" +
+            "</project>"
         assertEquals(expected, actual)
     }
 }

@@ -1,12 +1,12 @@
 package sp.kx.gradlex
 
+import org.gradle.api.DefaultTask
+import org.gradle.internal.FileUtils
+import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.nio.file.Files
-import org.gradle.internal.FileUtils
-import org.gradle.testfixtures.ProjectBuilder
 import java.util.concurrent.atomic.AtomicInteger
-import org.gradle.api.DefaultTask
 
 internal class TasksTest {
     @Test

@@ -1,20 +1,20 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import sp.gx.core.create
-import sp.gx.core.eff
-import sp.gx.core.getByName
-import sp.gx.core.task
 import sp.kx.gradlex.GitHub
 import sp.kx.gradlex.Markdown
 import sp.kx.gradlex.Maven
+import sp.kx.gradlex.add
 import sp.kx.gradlex.asFile
 import sp.kx.gradlex.assemble
 import sp.kx.gradlex.buildDir
 import sp.kx.gradlex.buildSrc
 import sp.kx.gradlex.check
 import sp.kx.gradlex.dir
+import sp.kx.gradlex.eff
+import sp.kx.gradlex.get
 
-version = "0.0.4"
+version = "0.0.5"
 
 val maven = Maven.Artifact(
     group = "com.github.kepocnhh",
@@ -125,7 +125,7 @@ task<Detekt>("checkCodeQuality") {
         txt.required = false
         xml.required = false
     }
-    val detektTask = tasks.getByName<Detekt>("detekt", sourceSet.name)
+    val detektTask = tasks.get<Detekt>("detekt", sourceSet.name)
     classpath.setFrom(detektTask.classpath)
     doFirst {
         println("Analysis report: ${report.absolutePath}")
@@ -135,27 +135,18 @@ task<Detekt>("checkCodeQuality") {
 fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Repository) {
     tasks.create("assemble", variant, "MavenMetadata") {
         doLast {
-            val file = buildDir()
-                .dir("yml")
-                .file("maven-metadata.yml")
-                .assemble(
-                    """
-                        repository:
-                         groupId: '${maven.group}'
-                         artifactId: '${maven.id}'
-                        version: '$version'
-                    """.trimIndent(),
-                )
-            println("Metadata: ${file.absolutePath}")
+            val target = buildDir().dir("yml").file("maven-metadata.yml")
+            val file = maven.assemble(version = version, target = target)
+            println("Maven metadata: ${file.absolutePath}")
         }
     }
-    task<Jar>("assemble", variant, "Jar") {
+    tasks.add<Jar>("assemble", variant, "Jar") {
         dependsOn(compileKotlinTask)
         archiveBaseName = maven.id
         archiveVersion = version
         from(compileKotlinTask.destinationDirectory.asFileTree)
     }
-    task<Jar>("assemble", variant, "Source") {
+    tasks.add<Jar>("assemble", variant, "Source") {
         archiveBaseName = maven.id
         archiveVersion = version
         archiveClassifier = "sources"

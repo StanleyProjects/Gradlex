@@ -9,5 +9,5 @@ plugins {
 
 dependencies {
     implementation("com.github.kepocnhh:GradleExtension.Core:0.6.1-SNAPSHOT") // todo
-    implementation("com.github.kepocnhh:Gradlex:0.0.3u-SNAPSHOT")
+    implementation("com.github.kepocnhh:Gradlex:0.0.4u-SNAPSHOT")
 }

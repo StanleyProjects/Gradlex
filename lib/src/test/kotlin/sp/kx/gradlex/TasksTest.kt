@@ -19,11 +19,23 @@ internal class TasksTest {
         project.tasks.create(expected, DefaultTask::class.java) {
             counter.incrementAndGet()
         }
-        val task = project.tasks.get<DefaultTask>("foo", "bar", "", "baz", " ", "qux") {
+        val task = project.tasks.get<DefaultTask>("foo", "bar", "", "baz", " ", "qux")
+        assertEquals(expected, task.name)
+        assertEquals(1, counter.get())
+    }
+
+    @Test
+    fun createTest() {
+        val projectDir = Files.createTempDirectory("TasksTest:addTest").toFile().let(FileUtils::canonicalize)
+        val project = ProjectBuilder.builder().withProjectDir(projectDir).build()
+        val counter = AtomicInteger(0)
+        assertEquals(0, counter.get())
+        val task = project.tasks.create("foo", "bar", "", "baz", " ", "qux") {
             counter.incrementAndGet()
         }
+        val expected = "fooBarBazQux"
         assertEquals(expected, task.name)
-        assertEquals(2, counter.get())
+        assertEquals(1, counter.get())
     }
 
     @Test

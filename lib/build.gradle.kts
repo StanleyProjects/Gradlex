@@ -177,8 +177,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
         doLast {
             val expected = setOf(
                 "GitHub ${Markdown.link(text = version, uri = gh.release(version = version))}",
-                "Maven ${Markdown.link("metadata", URI("https://central.sonatype.com/repository/maven-snapshots/com/github/kepocnhh/Gradlex/maven-metadata.xml"))}", // todo
-//                "Maven ${Markdown.link("metadata", Maven.Snapshot.metadata(group = maven.group, id = maven.id))}",
+                "Maven ${Markdown.link("metadata", Maven.Snapshot.metadata(artifact = maven))}",
                 "maven(\"${Maven.Snapshot.Host}\")",
                 "implementation(\"${maven.moduleName(version = version)}\")",
             )
@@ -199,8 +198,8 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
         doLast {
             val expected = setOf(
                 "GitHub ${Markdown.link(text = version, uri = gh.release(version = version))}",
-//                Markdown.link("Maven", Maven.Snapshot.url(maven, version)), // todo maven url
-                "maven(\"https://central.sonatype.com/repository/maven-snapshots\")", // todo maven import
+                "Maven ${Markdown.link("metadata", Maven.Snapshot.metadata(artifact = maven))}",
+                "maven(\"${Maven.Snapshot.Host}\")",
                 "implementation(\"${maven.moduleName(version = version)}\")",
             )
             rootDir.resolve("README.md").check(

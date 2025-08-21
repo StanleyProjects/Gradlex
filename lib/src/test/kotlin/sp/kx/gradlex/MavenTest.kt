@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.net.URI
 import java.nio.file.Files
+import java.util.Objects
 
 internal class MavenTest {
     @Test
@@ -125,5 +126,36 @@ internal class MavenTest {
         """.trimIndent()
         val actual = issuer.assemble(version = version, target = target).readText()
         assertEquals(expected, actual)
+    }
+
+    @Test
+    fun toStringTest() {
+        val group = "foo"
+        val id = "bar"
+        val issuer = Maven.Artifact(group = group, id = id)
+        val expected = "Artifact($group/$id)"
+        val actual = issuer.toString()
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun hashCodeTest() {
+        val group = "foo"
+        val id = "bar"
+        val issuer = Maven.Artifact(group = group, id = id)
+        val expected = Objects.hash(group, id)
+        val actual = issuer.hashCode()
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun equalsTest() {
+        val group = "foo"
+        val id = "bar"
+        val i0 = Maven.Artifact(group = group, id = id)
+        val i1 = Maven.Artifact(group = group, id = id)
+        val i2 = Maven.Artifact(group = id, id = group)
+        assertEquals(true, i0 == i1)
+        assertEquals(false, i0 == i2)
     }
 }

@@ -1,5 +1,8 @@
 package sp.kx.gradlex
 
+import org.gradle.api.file.RegularFile
+import java.io.File
+
 object Maven {
     class Artifact(val group: String, val id: String) {
         init {
@@ -51,6 +54,17 @@ object Maven {
         fun moduleName(version: String, separator: Char = ':'): String {
             require(version.isNotBlank()) { "The version is blank!" }
             return "$group$separator$id$separator$version"
+        }
+
+        fun assemble(version: String, target: RegularFile): File {
+            require(version.isNotBlank()) { "The version is blank!" }
+            val text = """
+                repository:
+                 groupId: '$group'
+                 artifactId: '$id'
+                version: '$version'
+            """.trimIndent()
+            return target.assemble(text)
         }
     }
 }

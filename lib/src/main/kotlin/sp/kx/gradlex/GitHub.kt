@@ -27,15 +27,13 @@ object GitHub {
 
         fun assemble(version: String, target: RegularFile): File {
             require(version.isNotBlank()) { "The version is blank!" }
-            val file = target.asFile
             val text = """
                 repository:
                  owner: '$owner'
                  name: '$name'
                 version: '$version'
             """.trimIndent()
-            file.assemble(text)
-            return file
+            return target.assemble(text)
         }
 
         override fun toString(): String {

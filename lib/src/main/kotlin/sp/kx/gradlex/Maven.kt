@@ -3,6 +3,7 @@ package sp.kx.gradlex
 import org.gradle.api.file.RegularFile
 import java.io.File
 import java.net.URI
+import java.util.Objects
 
 object Maven {
     class Artifact(val group: String, val id: String) {
@@ -117,6 +118,19 @@ object Maven {
                 version: '$version'
             """.trimIndent()
             return target.assemble(text)
+        }
+
+        override fun toString(): String {
+            return "Artifact($group/$id)"
+        }
+
+        override fun hashCode(): Int {
+            return Objects.hash(group, id)
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (other !is Artifact) return false
+            return group == other.group && id == other.id
         }
     }
 

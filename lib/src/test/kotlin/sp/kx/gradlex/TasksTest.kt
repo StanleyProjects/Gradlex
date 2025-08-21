@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger
 internal class TasksTest {
     @Test
     fun getTest() {
-        val projectDir = Files.createTempDirectory("TasksTest:getTest").toFile().let(FileUtils::canonicalize)
+        val projectDir = Files.createTempDirectory(this::class.java.name).toFile().let(FileUtils::canonicalize)
         val project = ProjectBuilder.builder().withProjectDir(projectDir).build()
         val counter = AtomicInteger(0)
         assertEquals(0, counter.get())
@@ -26,7 +26,7 @@ internal class TasksTest {
 
     @Test
     fun createTest() {
-        val projectDir = Files.createTempDirectory("TasksTest:addTest").toFile().let(FileUtils::canonicalize)
+        val projectDir = Files.createTempDirectory(this::class.java.name).toFile().let(FileUtils::canonicalize)
         val project = ProjectBuilder.builder().withProjectDir(projectDir).build()
         val counter = AtomicInteger(0)
         assertEquals(0, counter.get())
@@ -40,7 +40,7 @@ internal class TasksTest {
 
     @Test
     fun addTest() {
-        val projectDir = Files.createTempDirectory("TasksTest:addTest").toFile().let(FileUtils::canonicalize)
+        val projectDir = Files.createTempDirectory(this::class.java.name).toFile().let(FileUtils::canonicalize)
         val project = ProjectBuilder.builder().withProjectDir(projectDir).build()
         val counter = AtomicInteger(0)
         assertEquals(0, counter.get())

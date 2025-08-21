@@ -1,6 +1,5 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import sp.gx.core.create
 import sp.kx.gradlex.GitHub
 import sp.kx.gradlex.Markdown
 import sp.kx.gradlex.Maven
@@ -10,11 +9,13 @@ import sp.kx.gradlex.assemble
 import sp.kx.gradlex.buildDir
 import sp.kx.gradlex.buildSrc
 import sp.kx.gradlex.check
+import sp.kx.gradlex.create
 import sp.kx.gradlex.dir
 import sp.kx.gradlex.eff
 import sp.kx.gradlex.get
+import java.net.URI
 
-version = "0.0.5"
+version = "0.0.6"
 
 val maven = Maven.Artifact(
     group = "com.github.kepocnhh",
@@ -37,7 +38,7 @@ plugins {
 val compileKotlinTask = tasks.getByName<KotlinCompile>("compileKotlin") {
     kotlinOptions {
         jvmTarget = Version.jvmTarget
-        freeCompilerArgs += setOf("-module-name", maven.moduleName())
+        freeCompilerArgs += setOf("-module-name", maven.moduleName(separator = '-'))
     }
 }
 
@@ -154,15 +155,9 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
     }
     tasks.create("assemble", variant, "Pom") {
         doLast {
-            val file = buildDir()
-                .dir("libs")
-                .file("${maven.name(version = version)}.pom")
-                .assemble(
-                    maven.pom(
-                        version = version,
-                        packaging = "jar",
-                    ),
-                )
+            val target = buildDir().dir("libs").file("${maven.name(version = version)}.pom")
+            val text = maven.pom(version = version, packaging = "jar")
+            val file = target.assemble(text = text)
             println("POM: ${file.absolutePath}")
         }
     }
@@ -182,8 +177,9 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
         doLast {
             val expected = setOf(
                 "GitHub ${Markdown.link(text = version, uri = gh.release(version = version))}",
-//                Markdown.link("Maven", Maven.Snapshot.url(maven, version)), // todo maven url
-                "maven(\"https://central.sonatype.com/repository/maven-snapshots\")", // todo maven import
+                "Maven ${Markdown.link("metadata", URI("https://central.sonatype.com/repository/maven-snapshots/com/github/kepocnhh/Gradlex/maven-metadata.xml"))}", // todo
+//                "Maven ${Markdown.link("metadata", Maven.Snapshot.metadata(group = maven.group, id = maven.id))}",
+                "maven(\"${Maven.Snapshot.Host}\")",
                 "implementation(\"${maven.moduleName(version = version)}\")",
             )
             rootDir.resolve("README.md").check(

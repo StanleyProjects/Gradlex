@@ -211,7 +211,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
     tasks.create("check", variant, "Readme") {
         doLast {
             val expected = setOf(
-                "GitHub [$version](https://github.com/${gh.owner}/${gh.name}/releases/tag/$version)", // todo GitHub release
+                "GitHub ${Markdown.link(text = version, uri = gh.release(version = version))}",
 //                Markdown.link("Maven", Maven.Snapshot.url(maven, version)), // todo maven url
                 "maven(\"https://central.sonatype.com/repository/maven-snapshots\")", // todo maven import
                 "implementation(\"${maven.moduleName(version = version)}\")",

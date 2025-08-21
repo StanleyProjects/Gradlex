@@ -83,3 +83,10 @@ fun RegularFile.assemble(text: String): File {
     file.assemble(text)
     return file
 }
+
+fun File.eff(): File {
+    if (!exists()) error("Location \"$absolutePath\" does not exist!")
+    if (!isFile) error("Location \"$absolutePath\" is not a file!")
+    if (length() == 0L) error("File \"$absolutePath\" is empty!")
+    return this
+}

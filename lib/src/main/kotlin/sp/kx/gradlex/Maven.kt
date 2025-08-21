@@ -7,9 +7,9 @@ object Maven {
             require(id.isNotBlank()) { "The artifact ID is blank!" }
         }
 
-        fun name(version: String): String {
+        fun name(version: String, separator: Char = '-'): String {
             require(version.isNotBlank()) { "The version is blank!" }
-            return "$id-$version"
+            return "$id$separator$version"
         }
 
         fun pom(

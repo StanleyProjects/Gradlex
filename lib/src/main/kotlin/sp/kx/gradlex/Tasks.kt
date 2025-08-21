@@ -4,35 +4,32 @@ import org.gradle.api.Task
 import org.gradle.api.tasks.TaskContainer
 
 inline fun <reified T : Task> TaskContainer.get(
-    nameSegment: String,
-    secondNameSegment: String,
-    vararg otherNameSegments: String,
+    name0: String,
+    name1: String,
+    vararg nameN: String,
 ): T {
-    val name = camelCase(camelCase(nameSegment, secondNameSegment), *otherNameSegments)
+    val name = camelCase(camelCase(name0, name1), *nameN)
     val task = getByName(name)
     check(task is T)
     return task
 }
 
-inline fun <reified T : Task> TaskContainer.get(
-    nameSegment: String,
-    secondNameSegment: String,
-    vararg otherNameSegments: String,
-    noinline block: T.() -> Unit,
-): T {
-    val name = camelCase(camelCase(nameSegment, secondNameSegment), *otherNameSegments)
-    val task = getByName(name)
-    check(task is T)
-    task.block()
-    return task
+fun TaskContainer.create(
+    name0: String,
+    name1: String,
+    vararg nameN: String,
+    block: Task.() -> Unit,
+): Task {
+    val name = camelCase(camelCase(name0, name1), *nameN)
+    return create(name, block)
 }
 
 inline fun <reified T : Task> TaskContainer.add(
-    nameSegment: String,
-    secondNameSegment: String,
-    vararg otherNameSegments: String,
+    name0: String,
+    name1: String,
+    vararg nameN: String,
     noinline block: T.() -> Unit,
 ): T {
-    val name = camelCase(camelCase(nameSegment, secondNameSegment), *otherNameSegments)
+    val name = camelCase(camelCase(name0, name1), *nameN)
     return create(name, T::class.java, block)
 }

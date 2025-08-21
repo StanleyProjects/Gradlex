@@ -13,7 +13,6 @@ import sp.kx.gradlex.create
 import sp.kx.gradlex.dir
 import sp.kx.gradlex.eff
 import sp.kx.gradlex.get
-import java.net.URI
 
 version = "0.0.7"
 
@@ -180,6 +179,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
                 "Maven ${Markdown.link("metadata", Maven.Snapshot.metadata(artifact = maven))}",
                 "maven(\"${Maven.Snapshot.Host}\")",
                 "implementation(\"${maven.moduleName(version = version)}\")",
+                "gradle lib:assemble${variant.replaceFirstChar(Char::titlecase)}Jar",
             )
             rootDir.resolve("README.md").check(
                 expected = expected,
@@ -201,6 +201,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
                 "Maven ${Markdown.link("metadata", Maven.Snapshot.metadata(artifact = maven))}",
                 "maven(\"${Maven.Snapshot.Host}\")",
                 "implementation(\"${maven.moduleName(version = version)}\")",
+                "gradle lib:assemble${variant.replaceFirstChar(Char::titlecase)}Jar",
             )
             rootDir.resolve("README.md").check(
                 expected = expected,

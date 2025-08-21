@@ -1,6 +1,5 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import sp.gx.core.create
 import sp.kx.gradlex.GitHub
 import sp.kx.gradlex.Markdown
 import sp.kx.gradlex.Maven
@@ -10,6 +9,7 @@ import sp.kx.gradlex.assemble
 import sp.kx.gradlex.buildDir
 import sp.kx.gradlex.buildSrc
 import sp.kx.gradlex.check
+import sp.kx.gradlex.create
 import sp.kx.gradlex.dir
 import sp.kx.gradlex.eff
 import sp.kx.gradlex.get
@@ -182,8 +182,8 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
         doLast {
             val expected = setOf(
                 "GitHub ${Markdown.link(text = version, uri = gh.release(version = version))}",
-//                Markdown.link("Maven", Maven.Snapshot.url(maven, version)), // todo maven url
-                "maven(\"https://central.sonatype.com/repository/maven-snapshots\")", // todo maven import
+                "Maven ${Markdown.link("metadata", Maven.Snapshot.metadata(group = maven.group, id = maven.id))}",
+                "maven(\"${Maven.Snapshot.Host}\")",
                 "implementation(\"${maven.moduleName(version = version)}\")",
             )
             rootDir.resolve("README.md").check(

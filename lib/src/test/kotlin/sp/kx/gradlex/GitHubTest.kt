@@ -122,7 +122,10 @@ internal class GitHubTest {
         val i0 = GitHub.Repository(owner = owner, name = name)
         val i1 = GitHub.Repository(owner = owner, name = name)
         val i2 = GitHub.Repository(owner = name, name = owner)
+        val i3 = GitHub.Repository(owner = owner, name = owner)
         assertEquals(true, i0 == i1)
         assertEquals(false, i0 == i2)
+        assertEquals(false, i0 == i3)
+        assertEquals(false, i0.equals(Unit))
     }
 }

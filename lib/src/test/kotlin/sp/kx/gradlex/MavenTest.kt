@@ -98,6 +98,32 @@ internal class MavenTest {
     }
 
     @Test
+    fun pomErrorTest() {
+        val group = "foo"
+        val id = "bar"
+        val issuer = Maven.Artifact(group = group, id = id)
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.pom(
+                version = "baz",
+                packaging = "",
+            )
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.pom(
+                version = "",
+                packaging = "jar",
+            )
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.pom(
+                modelVersion = "",
+                version = "baz",
+                packaging = "jar",
+            )
+        }
+    }
+
+    @Test
     fun pomReleaseTest() {
         val group = "foo"
         val id = "bar"
@@ -131,6 +157,111 @@ internal class MavenTest {
             "<developers><developer><name>$developer</name></developer></developers>" +
             "</project>"
         assertEquals(expected, actual)
+    }
+
+    @Test
+    fun pomReleaseErrorTest() {
+        val group = "foo"
+        val id = "bar"
+        val issuer = Maven.Artifact(group = group, id = id)
+        val uri = URI("https://foo.com")
+        val license = URI("https://foo.com/license")
+        val scm = URI("https://foo.com/scm")
+        val developer = "test developer"
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.pom(
+                version = "baz",
+                packaging = "",
+                uri = uri,
+                licenses = setOf(license),
+                scm = scm,
+                developers = setOf(developer),
+            )
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.pom(
+                version = "",
+                packaging = "jar",
+                uri = uri,
+                licenses = setOf(license),
+                scm = scm,
+                developers = setOf(developer),
+            )
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.pom(
+                modelVersion = "",
+                version = "baz",
+                packaging = "jar",
+                uri = uri,
+                licenses = setOf(license),
+                scm = scm,
+                developers = setOf(developer),
+            )
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.pom(
+                version = "baz",
+                packaging = "jar",
+                uri = uri,
+                licenses = setOf(license),
+                scm = scm,
+                developers = setOf(developer),
+                name = "",
+            )
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.pom(
+                version = "baz",
+                packaging = "jar",
+                uri = uri,
+                licenses = setOf(license),
+                scm = scm,
+                developers = setOf(developer),
+                description = "",
+            )
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.pom(
+                version = "baz",
+                packaging = "jar",
+                uri = uri,
+                licenses = setOf(license),
+                scm = scm,
+                developers = setOf(developer),
+                tag = "",
+            )
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.pom(
+                version = "baz",
+                packaging = "jar",
+                uri = uri,
+                licenses = setOf(),
+                scm = scm,
+                developers = setOf(developer),
+            )
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.pom(
+                version = "baz",
+                packaging = "jar",
+                uri = uri,
+                licenses = setOf(license),
+                scm = scm,
+                developers = setOf(),
+            )
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.pom(
+                version = "baz",
+                packaging = "jar",
+                uri = uri,
+                licenses = setOf(license),
+                scm = scm,
+                developers = setOf(""),
+            )
+        }
     }
 
     @Test
@@ -203,7 +334,10 @@ internal class MavenTest {
         val i0 = Maven.Artifact(group = group, id = id)
         val i1 = Maven.Artifact(group = group, id = id)
         val i2 = Maven.Artifact(group = id, id = group)
+        val i3 = Maven.Artifact(group = group, id = group)
         assertEquals(true, i0 == i1)
         assertEquals(false, i0 == i2)
+        assertEquals(false, i0 == i3)
+        assertEquals(false, i0.equals(Unit))
     }
 }

@@ -69,7 +69,7 @@ object Maven {
             require(tag.isNotBlank()) { "The tag is blank!" }
             require(licenses.isNotEmpty()) { "No licenses!" }
             require(developers.isNotEmpty()) { "No developers!" }
-            if (developers.any { it.isBlank() }) error("Wrong developers!")
+            require(developers.none { it.isBlank() }) { "Wrong developers!" }
             val host = URI("http://maven.apache.org")
             val url = URI("$host/POM/$modelVersion")
             val project = setOf(

@@ -3,12 +3,23 @@ package sp.kx.gradlex
 import org.gradle.internal.FileUtils
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import java.net.URI
 import java.nio.file.Files
 import java.util.Objects
 
 internal class MavenTest {
+    @Test
+    fun constructorErrorTest() {
+        assertThrows(IllegalArgumentException::class.java) {
+            Maven.Artifact(group = "", id = "")
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            Maven.Artifact(group = "1", id = "")
+        }
+    }
+
     @Test
     fun nameTest() {
         val group = "foo"
@@ -18,6 +29,17 @@ internal class MavenTest {
         val expected = "$id-$version"
         val actual = issuer.name(version = version)
         assertEquals(expected, actual)
+    }
+
+    @Test
+    fun nameErrorTest() {
+        val group = "foo"
+        val id = "bar"
+        val issuer = Maven.Artifact(group = group, id = id)
+        val version = ""
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.name(version = version)
+        }
     }
 
     @Test
@@ -39,6 +61,18 @@ internal class MavenTest {
         val expected = "$group:$id:$version"
         val actual = issuer.moduleName(version = version)
         assertEquals(expected, actual)
+    }
+
+
+    @Test
+    fun moduleNameErrorTest() {
+        val group = "foo"
+        val id = "bar"
+        val issuer = Maven.Artifact(group = group, id = id)
+        val version = ""
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.moduleName(version = version)
+        }
     }
 
     @Test
@@ -126,6 +160,20 @@ internal class MavenTest {
         """.trimIndent()
         val actual = issuer.assemble(version = version, target = target).readText()
         assertEquals(expected, actual)
+    }
+
+    @Test
+    fun assembleErrorTest() {
+        val group = "foo"
+        val id = "bar"
+        val issuer = Maven.Artifact(group = group, id = id)
+        val version = ""
+        val projectDir = Files.createTempDirectory(this::class.java.name).toFile().let(FileUtils::canonicalize)
+        val project = ProjectBuilder.builder().withProjectDir(projectDir).build()
+        val target = project.layout.projectDirectory.file("foo")
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.assemble(version = version, target = target)
+        }
     }
 
     @Test

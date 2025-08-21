@@ -3,12 +3,23 @@ package sp.kx.gradlex
 import org.gradle.internal.FileUtils
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import java.net.URI
 import java.nio.file.Files
 import java.util.Objects
 
 internal class GitHubTest {
+    @Test
+    fun constructorErrorTest() {
+        assertThrows(IllegalArgumentException::class.java) {
+            GitHub.Repository(owner = "", name = "")
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            GitHub.Repository(owner = "1", name = "")
+        }
+    }
+
     @Test
     fun uriTest() {
         val owner = "foo"
@@ -41,6 +52,17 @@ internal class GitHubTest {
     }
 
     @Test
+    fun releaseErrorTest() {
+        val owner = "foo"
+        val name = "bar"
+        val gh = GitHub.Repository(owner = owner, name = name)
+        val version = ""
+        assertThrows(IllegalArgumentException::class.java) {
+            gh.release(version = version)
+        }
+    }
+
+    @Test
     fun assembleTest() {
         val owner = "foo"
         val name = "bar"
@@ -57,6 +79,20 @@ internal class GitHubTest {
         """.trimIndent()
         val actual = gh.assemble(version = version, target = target).readText()
         assertEquals(expected, actual)
+    }
+
+    @Test
+    fun assembleErrorTest() {
+        val owner = "foo"
+        val name = "bar"
+        val issuer = GitHub.Repository(owner = owner, name = name)
+        val version = ""
+        val projectDir = Files.createTempDirectory(this::class.java.name).toFile().let(FileUtils::canonicalize)
+        val project = ProjectBuilder.builder().withProjectDir(projectDir).build()
+        val target = project.layout.projectDirectory.file("foo")
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.assemble(version = version, target = target)
+        }
     }
 
     @Test

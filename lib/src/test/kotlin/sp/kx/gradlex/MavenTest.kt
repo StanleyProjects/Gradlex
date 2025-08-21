@@ -1,8 +1,11 @@
 package sp.kx.gradlex
 
+import org.gradle.internal.FileUtils
+import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.net.URI
+import java.nio.file.Files
 
 internal class MavenTest {
     @Test
@@ -102,6 +105,25 @@ internal class MavenTest {
         val issuer = Maven.Artifact(group = group, id = id)
         val actual = Maven.Snapshot.metadata(artifact = issuer)
         val expected = URI("https://central.sonatype.com/repository/maven-snapshots/com/github/foo/$id/maven-metadata.xml")
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun assembleTest() {
+        val group = "foo"
+        val id = "bar"
+        val issuer = Maven.Artifact(group = group, id = id)
+        val version = "baz"
+        val projectDir = Files.createTempDirectory(this::class.java.name).toFile().let(FileUtils::canonicalize)
+        val project = ProjectBuilder.builder().withProjectDir(projectDir).build()
+        val target = project.layout.projectDirectory.file("foo")
+        val expected = """
+            repository:
+             groupId: '$group'
+             artifactId: '$id'
+            version: '$version'
+        """.trimIndent()
+        val actual = issuer.assemble(version = version, target = target).readText()
         assertEquals(expected, actual)
     }
 }

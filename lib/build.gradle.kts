@@ -38,7 +38,7 @@ plugins {
 val compileKotlinTask = tasks.getByName<KotlinCompile>("compileKotlin") {
     kotlinOptions {
         jvmTarget = Version.jvmTarget
-        freeCompilerArgs += setOf("-module-name", maven.moduleName())
+        freeCompilerArgs += setOf("-module-name", maven.moduleName(separator = '-'))
     }
 }
 
@@ -155,15 +155,9 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
     }
     tasks.create("assemble", variant, "Pom") {
         doLast {
-            val file = buildDir()
-                .dir("libs")
-                .file("${maven.name(version = version)}.pom")
-                .assemble(
-                    maven.pom(
-                        version = version,
-                        packaging = "jar",
-                    ),
-                )
+            val target = buildDir().dir("libs").file("${maven.name(version = version)}.pom")
+            val text = maven.pom(version = version, packaging = "jar")
+            val file = target.assemble(text = text)
             println("POM: ${file.absolutePath}")
         }
     }

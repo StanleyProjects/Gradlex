@@ -24,8 +24,8 @@ object Maven {
             require(modelVersion.isNotBlank()) { "The model version is blank!" }
             require(version.isNotBlank()) { "The version is blank!" }
             require(packaging.isNotBlank()) { "The packaging is blank!" }
-            val host = "http://maven.apache.org"
-            val url = "$host/POM/$modelVersion"
+            val host = URI("http://maven.apache.org")
+            val url = URI("$host/POM/$modelVersion")
             val project = setOf(
                 "xsi:schemaLocation" to "$url $host/xsd/maven-$modelVersion.xsd",
                 "xmlns" to url,
@@ -69,8 +69,8 @@ object Maven {
             require(licenses.isNotEmpty()) { "No licenses!" }
             require(developers.isNotEmpty()) { "No developers!" }
             if (developers.any { it.isBlank() }) error("Wrong developers!")
-            val host = "http://maven.apache.org"
-            val url = "$host/POM/$modelVersion"
+            val host = URI("http://maven.apache.org")
+            val url = URI("$host/POM/$modelVersion")
             val project = setOf(
                 "xsi:schemaLocation" to "$url $host/xsd/maven-$modelVersion.xsd",
                 "xmlns" to url,
@@ -87,9 +87,9 @@ object Maven {
                 "name" to name,
                 "description" to description,
                 "url" to uri.toString(),
-                "licenses" to licenses.joinToString { uri -> "<license><url>$uri</url></license>" },
+                "licenses" to licenses.joinToString { "<license><url>$it</url></license>" },
                 "scm" to "<tag>$tag</tag><url>$scm</url>",
-                "developers" to developers.joinToString { name -> "<developer><name>$name</name></developer>" },
+                "developers" to developers.joinToString { "<developer><name>$it</name></developer>" },
             ).joinToString(
                 prefix = "<project $project>",
                 separator = "",

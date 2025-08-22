@@ -6,6 +6,8 @@ import java.net.URI
 import java.util.Objects
 
 object Maven {
+    val Host = URI("https://central.sonatype.com")
+
     class Artifact(val group: String, val id: String) {
         init {
             require(group.isNotBlank()) { "The group ID is blank!" }
@@ -118,6 +120,15 @@ object Maven {
                 version: '$version'
             """.trimIndent()
             return target.assemble(text)
+        }
+
+        fun uri(): URI {
+            return URI("$Host/${group.replace('.', '/')}/$id")
+        }
+
+        fun uri(version: String): URI {
+            require(version.isNotBlank()) { "The version is blank!" }
+            return URI("$Host/${group.replace('.', '/')}/$id/$version")
         }
 
         override fun toString(): String {

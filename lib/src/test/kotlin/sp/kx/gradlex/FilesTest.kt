@@ -122,9 +122,10 @@ internal class FilesTest {
         val projectDir = Files.createTempDirectory(this::class.java.name).toFile().let(FileUtils::canonicalize)
         val project = ProjectBuilder.builder().withProjectDir(projectDir).build()
         val dir = project.layout.projectDirectory
-        val expected = "foobarbaz"
+        val expected = "foobarbaz\n1234567890"
         dir.file("foo").assemble(expected).check(
-            expected = setOf(expected),
+            expected = setOf("foobarbaz"),
+            regexes = setOf("\\d+".toRegex()),
             report = dir.file("report").asFile,
         )
     }

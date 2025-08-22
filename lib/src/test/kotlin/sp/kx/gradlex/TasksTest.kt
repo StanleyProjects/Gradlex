@@ -48,9 +48,10 @@ internal class TasksTest {
         val project = ProjectBuilder.builder().withProjectDir(projectDir).build()
         val counter = AtomicInteger(0)
         assertEquals(0, counter.get())
-        val task = project.tasks.create("foo", "bar", "", "baz", " ", "qux") {
+        project.tasks.create("foo", "bar", "", "baz", " ", "qux") {
             counter.incrementAndGet()
         }
+        val task = project.tasks.get<DefaultTask>("foo", "bar", "", "baz", " ", "qux")
         val expected = "fooBarBazQux"
         assertEquals(expected, task.name)
         assertEquals(1, counter.get())

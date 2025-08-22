@@ -16,7 +16,7 @@ internal class StringsTest {
     fun camelCaseErrorTest() {
         val expected = "The first segment is blank!"
         val actual = assertThrows(IllegalArgumentException::class.java) {
-            camelCase("")
+            camelCase("", "")
         }.message
         assertEquals(expected, actual)
     }

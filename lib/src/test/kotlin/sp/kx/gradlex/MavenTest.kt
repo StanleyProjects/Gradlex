@@ -63,7 +63,6 @@ internal class MavenTest {
         assertEquals(expected, actual)
     }
 
-
     @Test
     fun moduleNameErrorTest() {
         val group = "foo"
@@ -270,7 +269,7 @@ internal class MavenTest {
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         val actual = Maven.Snapshot.metadata(artifact = issuer)
-        val expected = URI("https://central.sonatype.com/repository/maven-snapshots/com/github/foo/$id/maven-metadata.xml")
+        val expected = URI("${Maven.Snapshot.Host}/com/github/foo/$id/maven-metadata.xml")
         assertEquals(expected, actual)
     }
 
@@ -304,6 +303,38 @@ internal class MavenTest {
         val target = project.layout.projectDirectory.file("foo")
         assertThrows(IllegalArgumentException::class.java) {
             issuer.assemble(version = version, target = target)
+        }
+    }
+
+    @Test
+    fun uriTest() {
+        val group = "foo"
+        val id = "bar"
+        val issuer = Maven.Artifact(group = group, id = id)
+        val expected = URI("${Maven.Host}/${issuer.group}/${issuer.id}")
+        val actual = issuer.uri()
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun uriVersionTest() {
+        val group = "foo"
+        val id = "bar"
+        val issuer = Maven.Artifact(group = group, id = id)
+        val version = "baz"
+        val expected = URI("${Maven.Host}/${issuer.group}/${issuer.id}/$version")
+        val actual = issuer.uri(version = version)
+        assertEquals(expected, actual)
+    }
+
+
+    @Test
+    fun uriVersionErrorTest() {
+        val group = "foo"
+        val id = "bar"
+        val issuer = Maven.Artifact(group = group, id = id)
+        assertThrows(IllegalArgumentException::class.java) {
+            issuer.uri(version = "")
         }
     }
 

@@ -8,6 +8,7 @@ import java.util.Objects
 object Maven {
     val Host = URI("https://central.sonatype.com")
 
+    @Suppress("TooManyFunctions")
     class Artifact(val group: String, val id: String) {
         init {
             require(group.isNotBlank()) { "The group ID is blank!" }
@@ -20,9 +21,9 @@ object Maven {
         }
 
         fun pom(
-            modelVersion: String = "4.0.0",
             version: String,
             packaging: String,
+            modelVersion: String = "4.0.0",
         ): String {
             require(modelVersion.isNotBlank()) { "The model version is blank!" }
             require(version.isNotBlank()) { "The version is blank!" }
@@ -51,8 +52,8 @@ object Maven {
             }
         }
 
+        @Suppress("LongParameterList")
         fun pom(
-            modelVersion: String = "4.0.0",
             version: String,
             packaging: String,
             name: String = id,
@@ -62,6 +63,7 @@ object Maven {
             scm: URI,
             tag: String = version,
             developers: Set<String>,
+            modelVersion: String = "4.0.0",
         ): String {
             require(modelVersion.isNotBlank()) { "The model version is blank!" }
             require(version.isNotBlank()) { "The version is blank!" }

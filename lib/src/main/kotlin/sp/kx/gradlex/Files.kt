@@ -68,10 +68,17 @@ fun File.file(): File {
 
 fun File.assemble(text: String) {
     require(text.isNotEmpty())
-    if (exists() && isFile) {
-        check(delete()) { "Failed to delete \"$absolutePath\" file!" }
+    if (exists()) {
+        if (isFile) {
+            check(delete()) { "Failed to delete \"$absolutePath\" file!" }
+        } else {
+            error("Location \"$absolutePath\" is not a file!")
+        }
     } else {
-        parentFile?.mkdirs() ?: error("File \"$name\" has no parent!")
+        val parentFile = parentFile ?: error("File \"$name\" has no parent!")
+        if (!parentFile.exists() || !parentFile.isDirectory) {
+            check(parentFile.mkdirs())
+        }
     }
     writeText(text)
 }

@@ -30,12 +30,46 @@ internal class FilesTest {
     }
 
     @Test
+    fun assembleTest() {
+        val projectDir = Files.createTempDirectory(this::class.java.name).toFile().let(FileUtils::canonicalize)
+        val project = ProjectBuilder.builder().withProjectDir(projectDir).build()
+        val file = project.layout.projectDirectory.dir("foo").file("bar").asFile
+        val parentFile = file.parentFile ?: TODO()
+        check(!parentFile.exists())
+        check(!file.exists())
+        val expected = "foobarbaz"
+        file.assemble(text = expected)
+        assertEquals(expected, file.readText())
+        check(file.delete())
+        check(parentFile.exists())
+        check(!file.exists())
+        file.assemble(text = expected)
+        assertEquals(expected, file.readText())
+        file.writeText("")
+        check(parentFile.exists())
+        check(file.exists())
+        check(file.length() == 0L)
+        file.assemble(text = expected)
+        assertEquals(expected, file.readText())
+    }
+
+    @Test
     fun assembleErrorTest() {
         val projectDir = Files.createTempDirectory(this::class.java.name).toFile().let(FileUtils::canonicalize)
         val project = ProjectBuilder.builder().withProjectDir(projectDir).build()
-        val file = project.layout.projectDirectory.file("foo").asFile
+        val dir = project.layout.projectDirectory
+        val file = dir.dir("foo").file("bar").asFile
         assertThrows(IllegalArgumentException::class.java) {
             file.assemble(text = "")
+        }
+        val parentFile = file.parentFile ?: TODO()
+        check(!file.exists())
+        check(file.mkdirs())
+        check(parentFile.exists())
+        check(file.exists())
+        check(!file.isFile)
+        assertThrows(IllegalStateException::class.java) {
+            file.assemble(text = "baz")
         }
     }
 

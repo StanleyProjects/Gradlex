@@ -327,7 +327,6 @@ internal class MavenTest {
         assertEquals(expected, actual)
     }
 
-
     @Test
     fun uriVersionErrorTest() {
         val group = "foo"

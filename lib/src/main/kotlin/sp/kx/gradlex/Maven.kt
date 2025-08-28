@@ -5,9 +5,23 @@ import java.io.File
 import java.net.URI
 import java.util.Objects
 
+/**
+ * A set of functions and types for working with [Maven](https://maven.apache.org).
+ * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+ * @since 0.1.0
+ */
 object Maven {
     val Host = URI("https://central.sonatype.com")
 
+    /**
+     * Encapsulates data about an [artifact](https://maven.apache.org/repositories/artifacts.html).
+     * @property group The artifact group.
+     * @property id The artifact id.
+     * @throws IllegalArgumentException if [group] is blank.
+     * @throws IllegalArgumentException if [id] is blank.
+     * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+     * @since 0.1.0
+     */
     @Suppress("TooManyFunctions")
     class Artifact(val group: String, val id: String) {
         init {
@@ -147,6 +161,11 @@ object Maven {
         }
     }
 
+    /**
+     * A set of functions and types for working with Maven snapshot [repositories](https://central.sonatype.com/repository/maven-snapshots).
+     * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+     * @since 0.1.0
+     */
     object Snapshot {
         val Host = URI("https://central.sonatype.com/repository/maven-snapshots")
 

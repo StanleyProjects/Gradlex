@@ -5,7 +5,21 @@ import java.io.File
 import java.net.URI
 import java.util.Objects
 
+/**
+ * A set of functions for working with [GitHub](https://github.com).
+ * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+ * @since 0.1.0
+ */
 object GitHub {
+    /**
+     * Encapsulates data about a GitHub [repository](https://docs.github.com/en/rest/repos).
+     * @property owner The account owner of the GitHub repository.
+     * @property name The name of the GitHub repository.
+     * @throws IllegalArgumentException if [owner] is blank.
+     * @throws IllegalArgumentException if [name] is blank.
+     * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+     * @since 0.1.0
+     */
     class Repository(val owner: String, val name: String) {
         init {
             require(owner.isNotBlank()) { "The owner is blank!" }

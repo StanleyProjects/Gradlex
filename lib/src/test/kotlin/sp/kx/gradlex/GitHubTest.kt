@@ -31,6 +31,34 @@ internal class GitHubTest {
     }
 
     @Test
+    fun uriPathTest() {
+        val owner = "foo"
+        val name = "bar"
+        val gh = GitHub.Repository(owner = owner, name = name)
+        listOf(
+            "" to "",
+            "" to "/",
+            "" to "//",
+            "/foo" to "foo",
+            "/foo" to "/foo",
+            "/foo" to "/foo/",
+            "/foo" to "//foo",
+            "/foo" to "foo/",
+            "/foo" to "foo//",
+            "/foo" to "/foo//",
+            "/foo" to "//foo//",
+            "/foo/bar" to "foo/bar",
+            "/foo/bar" to "/foo/bar",
+            "/foo/bar" to "/foo/bar/",
+            "/foo/bar" to "//foo/bar/",
+        ).forEach { (postfix, path) ->
+            val expected = URI("https://github.com/$owner/$name$postfix")
+            val actual = gh.uri(path = path)
+            assertEquals(expected, actual)
+        }
+    }
+
+    @Test
     fun pagesTest() {
         val owner = "foo"
         val name = "bar"

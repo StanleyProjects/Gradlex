@@ -26,10 +26,32 @@ object GitHub {
             require(name.isNotBlank()) { "The name is blank!" }
         }
 
+        /**
+         * Usage:
+         * ```
+         * val repository = GitHub.Repository(owner = "foo", name = "bar")
+         * val expected = URI("https://github.com/foo/bar")
+         * assertEquals(expected, repository.uri())
+         * ```
+         * @return The [URI] of the root of this [GitHub.Repository].
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         fun uri(): URI {
             return URI("https://github.com/$owner/$name")
         }
 
+        /**
+         * Usage:
+         * ```
+         * val repository = GitHub.Repository(owner = "foo", name = "bar")
+         * val expected = URI("https://github.com/foo/bar/baz")
+         * assertEquals(expected, repository.uri(path = "baz"))
+         * ```
+         * @return The [URI] of the [path] of this [GitHub.Repository].
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         fun uri(path: String): URI {
             val builder = StringBuilder("https://github.com/$owner/$name")
             val split = path.split("/")
@@ -39,10 +61,32 @@ object GitHub {
             return URI(builder.toString())
         }
 
+        /**
+         * Usage:
+         * ```
+         * val repository = GitHub.Repository(owner = "foo", name = "bar")
+         * val expected = URI("https://foo.github.io/bar")
+         * assertEquals(expected, repository.pages())
+         * ```
+         * @return The [URI] of the root of the GitHub [pages](https://pages.github.com) of this [GitHub.Repository].
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         fun pages(): URI {
             return URI("https://$owner.github.io/$name")
         }
 
+        /**
+         * Usage:
+         * ```
+         * val repository = GitHub.Repository(owner = "foo", name = "bar")
+         * val expected = URI("https://foo.github.io/bar/baz")
+         * assertEquals(expected, repository.pages(path = "baz"))
+         * ```
+         * @return The [URI] of the [path] of the GitHub [pages](https://pages.github.com) of this [GitHub.Repository].
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         fun pages(path: String): URI {
             val builder = StringBuilder("https://$owner.github.io/$name")
             val split = path.split("/")
@@ -52,6 +96,18 @@ object GitHub {
             return URI(builder.toString())
         }
 
+        /**
+         * Usage:
+         * ```
+         * val repository = GitHub.Repository(owner = "foo", name = "bar")
+         * val expected = URI("https://github.com/foo/bar/releases/tag/1.2.3")
+         * assertEquals(expected, repository.release(version = "1.2.3"))
+         * ```
+         * @throws IllegalArgumentException if [version] is blank.
+         * @return The [URI] of the release of this [GitHub.Repository].
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         fun release(version: String): URI {
             require(version.isNotBlank()) { "The version is blank!" }
             return URI("https://github.com/$owner/$name/releases/tag/$version")

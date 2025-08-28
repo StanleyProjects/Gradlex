@@ -29,6 +29,16 @@ object Maven {
             require(id.isNotBlank()) { "The artifact ID is blank!" }
         }
 
+        /**
+         * Usage:
+         * ```
+         * val artifact = Maven.Artifact(group = "foo", id = "bar")
+         * assertEquals("bar-1.2.3", artifact.name(version = "1.2.3"))
+         * ```
+         * @throws IllegalArgumentException if [version] is blank.
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         fun name(version: String, separator: Char = '-'): String {
             require(version.isNotBlank()) { "The version is blank!" }
             return "$id$separator$version"
@@ -118,10 +128,29 @@ object Maven {
             }
         }
 
+        /**
+         * Usage:
+         * ```
+         * val artifact = Maven.Artifact(group = "foo", id = "bar")
+         * assertEquals("foo:bar", artifact.moduleName())
+         * ```
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         fun moduleName(separator: Char = ':'): String {
             return "$group$separator$id"
         }
 
+        /**
+         * Usage:
+         * ```
+         * val artifact = Maven.Artifact(group = "foo", id = "bar")
+         * assertEquals("foo:bar:1.2.3", artifact.moduleName(version = "1.2.3"))
+         * ```
+         * @throws IllegalArgumentException if [version] is blank.
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         fun moduleName(version: String, separator: Char = ':'): String {
             require(version.isNotBlank()) { "The version is blank!" }
             return "$group$separator$id$separator$version"
@@ -138,10 +167,32 @@ object Maven {
             return target.assemble(text)
         }
 
+        /**
+         * Usage:
+         * ```
+         * val artifact = Maven.Artifact(group = "foo", id = "bar")
+         * val expected = URI("https://central.sonatype.com/artifact/foo/bar")
+         * assertEquals(expected, artifact.uri())
+         * ```
+         * @return The [URI] of the root of this [Maven.Artifact].
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         fun uri(): URI {
             return URI("$Host/artifact/$group/$id")
         }
 
+        /**
+         * Usage:
+         * ```
+         * val artifact = Maven.Artifact(group = "foo", id = "bar")
+         * val expected = URI("https://central.sonatype.com/artifact/foo/bar/1.2.3")
+         * assertEquals(expected, artifact.uri(version = "1.2.3"))
+         * ```
+         * @return The [URI] of the [version] of this [Maven.Artifact].
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         fun uri(version: String): URI {
             require(version.isNotBlank()) { "The version is blank!" }
             return URI("$Host/artifact/$group/$id/$version")

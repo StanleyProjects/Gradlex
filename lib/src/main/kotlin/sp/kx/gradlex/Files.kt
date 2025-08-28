@@ -40,8 +40,7 @@ fun File.check(
             }
         }
     }
-    if (report.exists()) {
-        check(report.isFile) { "report is not a file" }
+    if (report.exists() && report.isFile) {
         check(report.delete())
     } else {
         report.parentFile?.mkdirs() ?: error("report has no parent")
@@ -70,10 +69,16 @@ fun File.file(): File {
 fun File.assemble(text: String) {
     require(text.isNotEmpty())
     if (exists()) {
-        file()
-        check(delete()) { "Failed to delete \"$absolutePath\" file!" }
+        if (isFile) {
+            check(delete()) { "Failed to delete \"$absolutePath\" file!" }
+        } else {
+            error("Location \"$absolutePath\" is not a file!")
+        }
     } else {
-        parentFile?.mkdirs() ?: error("File \"$name\" has no parent!")
+        val parentFile = parentFile ?: error("File \"$name\" has no parent!")
+        if (!parentFile.exists() || !parentFile.isDirectory) {
+            check(parentFile.mkdirs())
+        }
     }
     writeText(text)
 }

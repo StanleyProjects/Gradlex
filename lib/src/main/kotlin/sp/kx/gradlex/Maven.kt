@@ -3,8 +3,12 @@ package sp.kx.gradlex
 import org.gradle.api.file.RegularFile
 import java.io.File
 import java.net.URI
+import java.util.Objects
 
 object Maven {
+    val Host = URI("https://central.sonatype.com")
+
+    @Suppress("TooManyFunctions")
     class Artifact(val group: String, val id: String) {
         init {
             require(group.isNotBlank()) { "The group ID is blank!" }
@@ -17,9 +21,9 @@ object Maven {
         }
 
         fun pom(
-            modelVersion: String = "4.0.0",
             version: String,
             packaging: String,
+            modelVersion: String = "4.0.0",
         ): String {
             require(modelVersion.isNotBlank()) { "The model version is blank!" }
             require(version.isNotBlank()) { "The version is blank!" }
@@ -48,8 +52,8 @@ object Maven {
             }
         }
 
+        @Suppress("LongParameterList")
         fun pom(
-            modelVersion: String = "4.0.0",
             version: String,
             packaging: String,
             name: String = id,
@@ -59,6 +63,7 @@ object Maven {
             scm: URI,
             tag: String = version,
             developers: Set<String>,
+            modelVersion: String = "4.0.0",
         ): String {
             require(modelVersion.isNotBlank()) { "The model version is blank!" }
             require(version.isNotBlank()) { "The version is blank!" }
@@ -68,7 +73,7 @@ object Maven {
             require(tag.isNotBlank()) { "The tag is blank!" }
             require(licenses.isNotEmpty()) { "No licenses!" }
             require(developers.isNotEmpty()) { "No developers!" }
-            if (developers.any { it.isBlank() }) error("Wrong developers!")
+            require(developers.none { it.isBlank() }) { "Wrong developers!" }
             val host = URI("http://maven.apache.org")
             val url = URI("$host/POM/$modelVersion")
             val project = setOf(
@@ -117,6 +122,28 @@ object Maven {
                 version: '$version'
             """.trimIndent()
             return target.assemble(text)
+        }
+
+        fun uri(): URI {
+            return URI("$Host/artifact/$group/$id")
+        }
+
+        fun uri(version: String): URI {
+            require(version.isNotBlank()) { "The version is blank!" }
+            return URI("$Host/artifact/$group/$id/$version")
+        }
+
+        override fun toString(): String {
+            return "Artifact($group/$id)"
+        }
+
+        override fun hashCode(): Int {
+            return Objects.hash(group, id)
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (other !is Artifact) return false
+            return group == other.group && id == other.id
         }
     }
 

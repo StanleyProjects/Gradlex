@@ -8,7 +8,7 @@ inline fun <reified T : Task> TaskContainer.get(
     name1: String,
     vararg nameN: String,
 ): T {
-    val name = camelCase(camelCase(name0, name1), *nameN)
+    val name = camelCase(name0, name1, *nameN)
     val task = getByName(name)
     check(task is T)
     return task
@@ -20,7 +20,7 @@ fun TaskContainer.create(
     vararg nameN: String,
     block: Task.() -> Unit,
 ): Task {
-    val name = camelCase(camelCase(name0, name1), *nameN)
+    val name = camelCase(name0, name1, *nameN)
     return create(name, block)
 }
 
@@ -30,6 +30,6 @@ inline fun <reified T : Task> TaskContainer.add(
     vararg nameN: String,
     noinline block: T.() -> Unit,
 ): T {
-    val name = camelCase(camelCase(name0, name1), *nameN)
+    val name = camelCase(name0, name1, *nameN)
     return create(name, T::class.java, block)
 }

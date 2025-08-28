@@ -20,6 +20,15 @@ object GitHub {
             return URI("https://$owner.github.io/$name")
         }
 
+        fun pages(path: String): URI {
+            val builder = StringBuilder("https://$owner.github.io/$name")
+            val split = path.split("/")
+            for (it in split) {
+                if (it.isNotBlank()) builder.append("/").append(it)
+            }
+            return URI(builder.toString())
+        }
+
         fun release(version: String): URI {
             require(version.isNotBlank()) { "The version is blank!" }
             return URI("https://github.com/$owner/$name/releases/tag/$version")

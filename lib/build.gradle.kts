@@ -258,7 +258,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
     tasks.create("assemble", variant, "Pom") {
         doLast {
             val target = buildDir().dir("libs").file("${maven.name(version = version)}.pom")
-            val license = URI("${gh.uri()}/blob/$version/LICENSE")
+            val license = gh.uri("blob/$version/LICENSE")
             val developer = "Stanley Wintergreen" // todo
             val text = maven.pom(
                 version = version,
@@ -277,9 +277,8 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
         doLast {
             val expected = setOf(
                 Markdown.link(text = "GitHub", uri = gh.release(version = version)),
-//                "Maven ${Markdown.link(text = version, uri = maven.uri(version = version))}", // todo
-                Markdown.link(text = "Maven", uri = URI("https://central.sonatype.com/artifact/${maven.group}/${maven.id}/$version")), // todo
-                Markdown.link(text = "Docs", uri = URI("${gh.pages()}/docs/$version")), // todo docs
+                Markdown.link(text = "Maven", uri = maven.uri(version = version)),
+                Markdown.link(text = "Docs", uri = gh.pages("docs/$version")),
                 "implementation(\"${maven.moduleName(version = version)}\")",
                 "gradle lib:assemble${variant.replaceFirstChar(Char::titlecase)}Jar",
             )
@@ -300,7 +299,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
             reportUndocumented = false
             sourceLink {
                 localDirectory = file(path)
-                remoteUrl = URI("${gh.uri()}/tree/${moduleVersion.get()}/lib/$path").toURL() // todo
+                remoteUrl = gh.uri("tree/${moduleVersion.get()}/lib/$path").toURL()
             }
             jdkVersion = Version.jvmTarget.toInt()
         }

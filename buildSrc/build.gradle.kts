@@ -8,5 +8,5 @@ plugins {
 }
 
 dependencies {
-    implementation("com.github.kepocnhh:Gradlex:0.0.7-SNAPSHOT")
+    implementation("com.github.kepocnhh:Gradlex:0.1.0-SNAPSHOT")
 }

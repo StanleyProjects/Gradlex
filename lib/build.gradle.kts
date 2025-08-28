@@ -14,7 +14,7 @@ import sp.kx.gradlex.dir
 import sp.kx.gradlex.eff
 import sp.kx.gradlex.get
 
-version = "0.0.7"
+version = "0.1.0"
 
 val maven = Maven.Artifact(
     group = "com.github.kepocnhh",

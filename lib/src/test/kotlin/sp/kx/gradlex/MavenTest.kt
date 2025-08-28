@@ -22,7 +22,7 @@ internal class MavenTest {
 
     @Test
     fun nameTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         val version = "baz"
@@ -33,7 +33,7 @@ internal class MavenTest {
 
     @Test
     fun nameErrorTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         val version = ""
@@ -44,7 +44,7 @@ internal class MavenTest {
 
     @Test
     fun moduleNameTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         val expected = "$group:$id"
@@ -54,7 +54,7 @@ internal class MavenTest {
 
     @Test
     fun moduleNameVersionTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         val version = "baz"
@@ -65,7 +65,7 @@ internal class MavenTest {
 
     @Test
     fun moduleNameErrorTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         val version = ""
@@ -76,7 +76,7 @@ internal class MavenTest {
 
     @Test
     fun pomTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         val version = "baz"
@@ -98,7 +98,7 @@ internal class MavenTest {
 
     @Test
     fun pomErrorTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         assertThrows(IllegalArgumentException::class.java) {
@@ -124,7 +124,7 @@ internal class MavenTest {
 
     @Test
     fun pomReleaseTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         val version = "baz"
@@ -160,7 +160,7 @@ internal class MavenTest {
 
     @Test
     fun pomReleaseErrorTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         val uri = URI("https://foo.com")
@@ -275,7 +275,7 @@ internal class MavenTest {
 
     @Test
     fun assembleTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         val version = "baz"
@@ -294,7 +294,7 @@ internal class MavenTest {
 
     @Test
     fun assembleErrorTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         val version = ""
@@ -308,28 +308,28 @@ internal class MavenTest {
 
     @Test
     fun uriTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
-        val expected = URI("${Maven.Host}/${issuer.group}/${issuer.id}")
+        val expected = URI("${Maven.Host}/artifact/${issuer.group}/${issuer.id}")
         val actual = issuer.uri()
         assertEquals(expected, actual)
     }
 
     @Test
     fun uriVersionTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         val version = "baz"
-        val expected = URI("${Maven.Host}/${issuer.group}/${issuer.id}/$version")
+        val expected = URI("${Maven.Host}/artifact/${issuer.group}/${issuer.id}/$version")
         val actual = issuer.uri(version = version)
         assertEquals(expected, actual)
     }
 
     @Test
     fun uriVersionErrorTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         assertThrows(IllegalArgumentException::class.java) {
@@ -339,7 +339,7 @@ internal class MavenTest {
 
     @Test
     fun toStringTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         val expected = "Artifact($group/$id)"
@@ -349,7 +349,7 @@ internal class MavenTest {
 
     @Test
     fun hashCodeTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val issuer = Maven.Artifact(group = group, id = id)
         val expected = Objects.hash(group, id)
@@ -359,7 +359,7 @@ internal class MavenTest {
 
     @Test
     fun equalsTest() {
-        val group = "foo"
+        val group = "org.host.foo"
         val id = "bar"
         val i0 = Maven.Artifact(group = group, id = id)
         val i1 = Maven.Artifact(group = group, id = id)
@@ -369,5 +369,19 @@ internal class MavenTest {
         assertEquals(false, i0 == i2)
         assertEquals(false, i0 == i3)
         assertEquals(false, i0.equals(Unit))
+    }
+
+    @Test
+    fun hostTest() {
+        val expected = "https://central.sonatype.com"
+        val actual = Maven.Host.toString()
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun hostSnapshotTest() {
+        val expected = "https://central.sonatype.com/repository/maven-snapshots"
+        val actual = Maven.Snapshot.Host.toString()
+        assertEquals(expected, actual)
     }
 }

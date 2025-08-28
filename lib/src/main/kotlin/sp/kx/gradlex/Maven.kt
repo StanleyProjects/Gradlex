@@ -125,12 +125,12 @@ object Maven {
         }
 
         fun uri(): URI {
-            return URI("$Host/${group.replace('.', '/')}/$id")
+            return URI("$Host/artifact/$group/$id")
         }
 
         fun uri(version: String): URI {
             require(version.isNotBlank()) { "The version is blank!" }
-            return URI("$Host/${group.replace('.', '/')}/$id/$version")
+            return URI("$Host/artifact/$group/$id/$version")
         }
 
         override fun toString(): String {

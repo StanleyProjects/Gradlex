@@ -11,6 +11,11 @@ import java.util.Objects
  * @since 0.1.0
  */
 object Maven {
+    /**
+     * Maven central repository.
+     * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+     * @since 0.1.0
+     */
     val Host = URI("https://central.sonatype.com")
 
     /**
@@ -218,6 +223,11 @@ object Maven {
      * @since 0.1.0
      */
     object Snapshot {
+        /**
+         * Maven snapshots repository.
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         val Host = URI("https://central.sonatype.com/repository/maven-snapshots")
 
         fun metadata(artifact: Artifact): URI {

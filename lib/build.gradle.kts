@@ -14,7 +14,6 @@ import sp.kx.gradlex.create
 import sp.kx.gradlex.dir
 import sp.kx.gradlex.eff
 import sp.kx.gradlex.get
-import java.net.URI
 
 version = "0.1.0"
 

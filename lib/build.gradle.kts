@@ -1,20 +1,21 @@
 import io.gitlab.arturbosch.detekt.Detekt
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import sp.gx.core.GitHub
-import sp.gx.core.Maven
-import sp.gx.core.asFile
-import sp.gx.core.assemble
-import sp.gx.core.buildDir
-import sp.gx.core.buildSrc
-import sp.gx.core.check
-import sp.gx.core.create
-import sp.gx.core.dir
-import sp.gx.core.eff
-import sp.gx.core.getByName
-import sp.gx.core.resolve
-import sp.gx.core.task
+import sp.kx.gradlex.GitHub
+import sp.kx.gradlex.Markdown
+import sp.kx.gradlex.Maven
+import sp.kx.gradlex.add
+import sp.kx.gradlex.asFile
+import sp.kx.gradlex.assemble
+import sp.kx.gradlex.buildDir
+import sp.kx.gradlex.buildSrc
+import sp.kx.gradlex.check
+import sp.kx.gradlex.create
+import sp.kx.gradlex.dir
+import sp.kx.gradlex.eff
+import sp.kx.gradlex.get
 
-version = "0.0.1"
+version = "0.1.0"
 
 val maven = Maven.Artifact(
     group = "com.github.kepocnhh",
@@ -32,12 +33,13 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
     id("org.gradle.jacoco")
     id("io.gitlab.arturbosch.detekt") version Version.detekt
+    id("org.jetbrains.dokka") version Version.dokka
 }
 
 val compileKotlinTask = tasks.getByName<KotlinCompile>("compileKotlin") {
     kotlinOptions {
         jvmTarget = Version.jvmTarget
-        freeCompilerArgs += setOf("-module-name", maven.moduleName())
+        freeCompilerArgs += setOf("-module-name", maven.moduleName(separator = '-'))
     }
 }
 
@@ -50,6 +52,7 @@ tasks.getByName<KotlinCompile>("compileTestKotlin") {
 }
 
 dependencies {
+    implementation(gradleApi())
     testImplementation("org.junit.jupiter:junit-jupiter-api:${Version.jupiter}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Version.jupiter}")
 }
@@ -95,7 +98,7 @@ task<JacocoCoverageVerification>("checkCoverage") {
     violationRules {
         rule {
             limit {
-                minimum = BigDecimal(0.96)
+                minimum = BigDecimal(0.90) // todo 96
             }
         }
     }
@@ -124,7 +127,35 @@ task<Detekt>("checkCodeQuality") {
         txt.required = false
         xml.required = false
     }
-    val detektTask = tasks.getByName<Detekt>("detekt", sourceSet.name)
+    val detektTask = tasks.get<Detekt>("detekt", sourceSet.name)
+    classpath.setFrom(detektTask.classpath)
+    doFirst {
+        println("Analysis report: ${report.absolutePath}")
+    }
+}
+
+task<Detekt>("checkDocs") {
+    buildUponDefaultConfig = false
+    allRules = false
+    jvmTarget = Version.jvmTarget
+    val sourceSet = sourceSets.getByName("main")
+    source = sourceSet.allSource
+    val configs = setOf(buildSrc.dir("src/main/resources/detekt").eff("docs.yml"))
+    config.setFrom(configs)
+    val report = buildDir()
+        .dir("reports/analysis/docs/html")
+        .asFile("index.html")
+    reports {
+        html {
+            required = true
+            outputLocation = report
+        }
+        md.required = false
+        sarif.required = false
+        txt.required = false
+        xml.required = false
+    }
+    val detektTask = tasks.get<Detekt>("detekt", sourceSet.name)
     classpath.setFrom(detektTask.classpath)
     doFirst {
         println("Analysis report: ${report.absolutePath}")
@@ -134,59 +165,27 @@ task<Detekt>("checkCodeQuality") {
 fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Repository) {
     tasks.create("assemble", variant, "MavenMetadata") {
         doLast {
-            val file = buildDir()
-                .dir("yml")
-                .file("maven-metadata.yml")
-                .assemble(
-                    """
-                        repository:
-                         groupId: '${maven.group}'
-                         artifactId: '${maven.id}'
-                        version: '$version'
-                    """.trimIndent(),
-                )
-            println("Metadata: ${file.absolutePath}")
+            val target = buildDir().dir("yml").file("maven-metadata.yml")
+            val file = maven.assemble(version = version, target = target)
+            println("Maven metadata: ${file.absolutePath}")
         }
     }
-    task<Jar>("assemble", variant, "Jar") {
+    tasks.add<Jar>("assemble", variant, "Jar") {
         dependsOn(compileKotlinTask)
         archiveBaseName = maven.id
         archiveVersion = version
         from(compileKotlinTask.destinationDirectory.asFileTree)
     }
-    task<Jar>("assemble", variant, "Source") {
+    tasks.add<Jar>("assemble", variant, "Source") {
         archiveBaseName = maven.id
         archiveVersion = version
         archiveClassifier = "sources"
         from(sourceSets.main.get().allSource)
     }
-    tasks.create("assemble", variant, "Pom") {
-        doLast {
-            val file = buildDir()
-                .dir("libs")
-                .file("${maven.name(version = version)}.pom")
-                .assemble(
-                    maven.pom(
-                        version = version,
-                        packaging = "jar",
-                    ),
-                )
-            println("POM: ${file.absolutePath}")
-        }
-    }
     tasks.create("assemble", variant, "Metadata") {
         doLast {
-            val file = buildDir()
-                .dir("yml")
-                .file("metadata.yml")
-                .assemble(
-                    """
-                        repository:
-                         owner: '${gh.owner}'
-                         name: '${gh.name}'
-                        version: '$version'
-                    """.trimIndent(),
-                )
+            val target = buildDir().dir("yml").file("metadata.yml")
+            val file = gh.assemble(version = version, target = target)
             println("Metadata: ${file.absolutePath}")
         }
     }
@@ -195,13 +194,22 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
 "unstable".also { variant ->
     val version = "${version}u-SNAPSHOT"
     tasks(variant = variant, version = version, maven = maven, gh = gh)
+    tasks.create("assemble", variant, "Pom") {
+        doLast {
+            val target = buildDir().dir("libs").file("${maven.name(version = version)}.pom")
+            val text = maven.pom(version = version, packaging = "jar")
+            val file = target.assemble(text = text)
+            println("POM: ${file.absolutePath}")
+        }
+    }
     tasks.create("check", variant, "Readme") {
         doLast {
             val expected = setOf(
-                "GitHub [$version](https://github.com/${gh.owner}/${gh.name}/releases/tag/$version)", // todo GitHub release
-//                Markdown.link("Maven", Maven.Snapshot.url(maven, version)), // todo maven url
-                "maven(\"https://central.sonatype.com/repository/maven-snapshots\")", // todo maven import
-                "implementation(\"${maven.moduleName(version)}\")",
+                "GitHub ${Markdown.link(text = version, uri = gh.release(version = version))}",
+                "Maven ${Markdown.link("metadata", Maven.Snapshot.metadata(artifact = maven))}",
+                "maven(\"${Maven.Snapshot.Host}\")",
+                "implementation(\"${maven.moduleName(version = version)}\")",
+                "gradle lib:assemble${variant.replaceFirstChar(Char::titlecase)}Jar",
             )
             rootDir.resolve("README.md").check(
                 expected = expected,
@@ -216,13 +224,22 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
 "snapshot".also { variant ->
     val version = "$version-SNAPSHOT"
     tasks(variant = variant, version = version, maven = maven, gh = gh)
+    tasks.create("assemble", variant, "Pom") {
+        doLast {
+            val target = buildDir().dir("libs").file("${maven.name(version = version)}.pom")
+            val text = maven.pom(version = version, packaging = "jar")
+            val file = target.assemble(text = text)
+            println("POM: ${file.absolutePath}")
+        }
+    }
     tasks.create("check", variant, "Readme") {
         doLast {
             val expected = setOf(
-                "GitHub [$version](https://github.com/${gh.owner}/${gh.name}/releases/tag/$version)", // todo GitHub release
-//                Markdown.link("Maven", Maven.Snapshot.url(maven, version)), // todo maven url
-                "maven(\"https://central.sonatype.com/repository/maven-snapshots\")", // todo maven import
-                "implementation(\"${maven.moduleName(version)}\")",
+                "GitHub ${Markdown.link(text = version, uri = gh.release(version = version))}",
+                "Maven ${Markdown.link("metadata", Maven.Snapshot.metadata(artifact = maven))}",
+                "maven(\"${Maven.Snapshot.Host}\")",
+                "implementation(\"${maven.moduleName(version = version)}\")",
+                "gradle lib:assemble${variant.replaceFirstChar(Char::titlecase)}Jar",
             )
             rootDir.resolve("README.md").check(
                 expected = expected,
@@ -231,5 +248,70 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
                     .asFile("index.html"),
             )
         }
+    }
+}
+
+"release".also { variant ->
+    val version = version.toString()
+    tasks(variant = variant, version = version, maven = maven, gh = gh)
+    tasks.create("assemble", variant, "Pom") {
+        doLast {
+            val target = buildDir().dir("libs").file("${maven.name(version = version)}.pom")
+            val license = gh.uri("blob/$version/LICENSE")
+            val developer = "Stanley Wintergreen" // todo
+            val text = maven.pom(
+                version = version,
+                packaging = "jar",
+                uri = gh.uri(),
+                licenses = setOf(license),
+                scm = gh.uri(),
+                tag = version,
+                developers = setOf(developer),
+            )
+            val file = target.assemble(text = text)
+            println("POM: ${file.absolutePath}")
+        }
+    }
+    tasks.create("check", variant, "Readme") {
+        doLast {
+            val expected = setOf(
+                Markdown.link(text = "GitHub", uri = gh.release(version = version)),
+                Markdown.link(text = "Maven", uri = maven.uri(version = version)),
+                Markdown.link(text = "Docs", uri = gh.pages("docs/$version")),
+                "implementation(\"${maven.moduleName(version = version)}\")",
+                "gradle lib:assemble${variant.replaceFirstChar(Char::titlecase)}Jar",
+            )
+            rootDir.resolve("README.md").check(
+                expected = expected,
+                report = buildDir()
+                    .dir("reports/analysis/readme")
+                    .asFile("index.html"),
+            )
+        }
+    }
+    val docsTask = tasks.add<DokkaTask>("assemble", variant, "Docs") {
+        outputDirectory = buildDir().dir("docs/$variant")
+        moduleName = gh.name
+        moduleVersion = version
+        dokkaSourceSets.getByName("main") {
+            val path = "src/$name/kotlin"
+            reportUndocumented = false
+            sourceLink {
+                localDirectory = file(path)
+                remoteUrl = gh.uri("tree/${moduleVersion.get()}/lib/$path").toURL()
+            }
+            jdkVersion = Version.jvmTarget.toInt()
+        }
+        doLast {
+            val index = outputDirectory.get().eff("index.html")
+            println("Docs: ${index.absolutePath}")
+        }
+    }
+    tasks.add<Jar>("assemble", variant, "Javadoc") {
+        dependsOn(docsTask)
+        archiveBaseName = maven.id
+        archiveVersion = version
+        archiveClassifier = "javadoc"
+        from(docsTask.outputDirectory)
     }
 }

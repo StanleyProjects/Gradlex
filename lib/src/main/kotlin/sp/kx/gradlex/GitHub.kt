@@ -113,6 +113,22 @@ object GitHub {
             return URI("https://github.com/$owner/$name/releases/tag/$version")
         }
 
+        /**
+         * Writes data about this [GitHub.Repository] to a [target].
+         *
+         * Usage:
+         * ```
+         * val project: Project = ...
+         * val gh = GitHub.Repository(owner = "foo", name = "bar")
+         * val target = project.layout.projectDirectory.file("metadata.yml")
+         * val file = gh.assemble(version = "1.2.3", target = target)
+         * assertTrue(file.exists())
+         * assertEquals("metadata.yml", file.name)
+         * ```
+         * @throws IllegalArgumentException if [version] is blank.
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         fun assemble(version: String, target: RegularFile): File {
             require(version.isNotBlank()) { "The version is blank!" }
             val text = """

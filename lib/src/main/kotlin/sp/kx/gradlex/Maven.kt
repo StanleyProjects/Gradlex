@@ -266,7 +266,8 @@ object Maven {
     }
 
     /**
-     * A set of functions and types for working with Maven snapshot [repositories](https://central.sonatype.com/repository/maven-snapshots).
+     * A set of functions and types for working with
+     * Maven snapshot [repositories](https://central.sonatype.com/repository/maven-snapshots).
      * @author [Stanley Wintergreen](https://github.com/kepocnhh)
      * @since 0.1.0
      */
@@ -282,7 +283,7 @@ object Maven {
          * Usage:
          * ```
          * val artifact = Maven.Artifact(group = "com.github.foo", id = "bar")
-         * val expected = URI("https://central.sonatype.com/repository/maven-snapshots/com/github/foo/bar/maven-metadata.xml")
+         * val expected = URI("${Maven.Snapshot.Host}/com/github/foo/bar/maven-metadata.xml")
          * assertEquals(expected, Maven.Snapshot.metadata(artifact = artifact))
          * ```
          * @return The [URI] of the snapshot metadata of this [Maven.Artifact].

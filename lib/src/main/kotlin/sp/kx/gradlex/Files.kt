@@ -93,6 +93,20 @@ fun File.file(): File {
     return this
 }
 
+
+/**
+ * Usage:
+ * ```
+ * val text = "foo"
+ * val file = File("/tmp/bar").assemble(text)
+ * assertEquals(text, file.readText())
+ * ```
+ * @receiver The [File] to which the [text] will be written.
+ * @throws IllegalArgumentException if [text] is empty.
+ * @throws IllegalStateException if [this] receiver [File] exists and not a file.
+ * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+ * @since 0.1.0
+ */
 fun File.assemble(text: String) {
     require(text.isNotEmpty())
     if (exists()) {
@@ -110,6 +124,21 @@ fun File.assemble(text: String) {
     writeText(text)
 }
 
+/**
+ * Usage:
+ * ```
+ * val text = "foo"
+ * val file = layout.buildDirectory.get()
+ *     .dir("bar")
+ *     .file("baz")
+ *     .assemble(text)
+ * assertEquals(text, file.readText())
+ * ```
+ * @receiver The [RegularFile] to which the [text] will be written.
+ * @return The [File] of [this] receiver [RegularFile].
+ * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+ * @since 0.1.0
+ */
 fun RegularFile.assemble(text: String): File {
     val file = asFile
     file.assemble(text)

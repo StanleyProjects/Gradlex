@@ -49,6 +49,20 @@ object Maven {
             return "$id$separator$version"
         }
 
+        /**
+         * Usage:
+         * ```
+         * val artifact = Maven.Artifact(group = "foo", id = "bar")
+         * val xml = artifact.pom(
+         *     version = "42",
+         *     packaging = "jar",
+         * )
+         * assertEquals(XMLParser.parse(xml).getNode("project").getString("version"), "42")
+         * ```
+         * @return The [String] XML in Maven [POM](https://maven.apache.org/pom.html) format.
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         fun pom(
             version: String,
             packaging: String,
@@ -81,6 +95,24 @@ object Maven {
             }
         }
 
+        /**
+         * Usage:
+         * ```
+         * val artifact = Maven.Artifact(group = "foo", id = "bar")
+         * val xml = artifact.pom(
+         *     version = "42",
+         *     packaging = "jar",
+         *     uri = URI(...),
+         *     licenses = setOf(URI(...)),
+         *     scm = URI(...),
+         *     developers = setOf(...),
+         * )
+         * assertEquals(XMLParser.parse(xml).getNode("project").getString("version"), "42")
+         * ```
+         * @return The [String] XML in Maven [POM](https://maven.apache.org/pom.html) format.
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         @Suppress("LongParameterList")
         fun pom(
             version: String,
@@ -161,6 +193,22 @@ object Maven {
             return "$group$separator$id$separator$version"
         }
 
+        /**
+         * Writes data about this [Maven.Artifact] to a [target].
+         *
+         * Usage:
+         * ```
+         * val project: Project = ...
+         * val artifact = Maven.Artifact(group = "foo", id = "bar")
+         * val target = project.layout.projectDirectory.file("maven-metadata.yml")
+         * val file = artifact.assemble(version = "1.2.3", target = target)
+         * assertTrue(file.exists())
+         * assertEquals("maven-metadata.yml", file.name)
+         * ```
+         * @throws IllegalArgumentException if [version] is blank.
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         fun assemble(version: String, target: RegularFile): File {
             require(version.isNotBlank()) { "The version is blank!" }
             val text = """
@@ -230,6 +278,17 @@ object Maven {
          */
         val Host = URI("https://central.sonatype.com/repository/maven-snapshots")
 
+        /**
+         * Usage:
+         * ```
+         * val artifact = Maven.Artifact(group = "com.github.foo", id = "bar")
+         * val expected = URI("https://central.sonatype.com/repository/maven-snapshots/com/github/foo/bar/maven-metadata.xml")
+         * assertEquals(expected, Maven.Snapshot.metadata(artifact = artifact))
+         * ```
+         * @return The [URI] of the snapshot metadata of this [Maven.Artifact].
+         * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+         * @since 0.1.0
+         */
         fun metadata(artifact: Artifact): URI {
             return URI("$Host/${artifact.group.replace('.', '/')}/${artifact.id}/maven-metadata.xml")
         }

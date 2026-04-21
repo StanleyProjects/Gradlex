@@ -20,4 +20,18 @@ internal class StringsTest {
         }.message
         assertEquals(expected, actual)
     }
+
+    @Test
+    fun tfcTest() {
+        val expected = "FooBarBaz"
+        val actual = "fooBarBaz".tfc()
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun ufcTest() {
+        val expected = "FooBarBaz"
+        val actual = "fooBarBaz".ufc()
+        assertEquals(expected, actual)
+    }
 }

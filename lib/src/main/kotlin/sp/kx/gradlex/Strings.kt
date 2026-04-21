@@ -22,3 +22,11 @@ fun camelCase(n0: String, n1: String, vararg other: String): String {
     }
     return builder.toString()
 }
+
+fun String.tfc(): String {
+    return replaceFirstChar(Character::toTitleCase)
+}
+
+fun String.ufc(): String {
+    return replaceFirstChar(Character::toUpperCase)
+}

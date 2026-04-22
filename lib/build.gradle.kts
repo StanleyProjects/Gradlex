@@ -211,7 +211,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
             println("POM: ${file.absolutePath}")
         }
     }
-    tasks.register("assemble${variant.ufc()}Readme") {
+    tasks.register("check${variant.ufc()}Readme") {
         doLast {
             val expected = setOf(
                 "GitHub ${Markdown.link(text = version, uri = gh.release(version = version))}",
@@ -241,7 +241,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
             println("POM: ${file.absolutePath}")
         }
     }
-    tasks.register("assemble${variant.ufc()}Readme") {
+    tasks.register("check${variant.ufc()}Readme") {
         doLast {
             val expected = setOf(
                 "GitHub ${Markdown.link(text = version, uri = gh.release(version = version))}",
@@ -280,7 +280,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
             println("POM: ${file.absolutePath}")
         }
     }
-    tasks.register("assemble${variant.ufc()}Readme") {
+    tasks.register("check${variant.ufc()}Readme") {
         doLast {
             val expected = setOf(
                 Markdown.link(text = "GitHub", uri = gh.release(version = version)),

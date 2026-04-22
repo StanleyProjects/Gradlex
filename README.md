@@ -5,10 +5,10 @@ A few Gradle extensions.
 
 ## Release
 
-`0.2.1`
-| [GitHub](https://github.com/StanleyProjects/Gradlex/releases/tag/0.2.1)
-| [Maven](https://central.sonatype.com/artifact/com.github.kepocnhh/Gradlex/0.2.1)
-| [Docs](https://StanleyProjects.github.io/Gradlex/docs/0.2.1)
+`0.3.0`
+| [GitHub](https://github.com/StanleyProjects/Gradlex/releases/tag/0.3.0)
+| [Maven](https://central.sonatype.com/artifact/com.github.kepocnhh/Gradlex/0.3.0)
+| [Docs](https://StanleyProjects.github.io/Gradlex/docs/0.3.0)
 | [Key](https://StanleyProjects.github.io/release-public.pem)
 
 ### Build
@@ -19,7 +19,7 @@ $ gradle lib:assembleReleaseJar
 ### Import
 ```kotlin
 dependencies {
-    implementation("com.github.kepocnhh:Gradlex:0.2.1")
+    implementation("com.github.kepocnhh:Gradlex:0.3.0")
 }
 ```
 

@@ -276,6 +276,16 @@ object Maven {
         }
     }
 
+    /**
+     * Encapsulates data about a [developer](https://maven.apache.org/pom.html#Developers).
+     * @property name The developer's name.
+     * @property email The developer's email.
+     * @property url The developer's online address.
+     * @throws IllegalArgumentException if [name] is blank.
+     * @throws IllegalArgumentException if [email] not `null` and [email] is blank.
+     * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+     * @since 0.1.0
+     */
     data class Developer(
         val name: String,
         val email: String? = null,

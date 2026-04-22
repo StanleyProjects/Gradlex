@@ -154,11 +154,33 @@ object GitHub {
         }
     }
 
+    /**
+     * Usage:
+     * ```
+     * val expected = URI("https://foo.github.io")
+     * assertEquals(expected, GitHub.pages(owner = "foo"))
+     * ```
+     * @return The [URI] of the root of the GitHub [pages](https://pages.github.com) of the [owner].
+     * @throws IllegalArgumentException if [owner] is blank.
+     * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+     * @since 0.3.0
+     */
     fun pages(owner: String): URI {
         require(owner.isNotBlank()) { "The owner is blank!" }
         return URI("https://$owner.github.io")
     }
 
+    /**
+     * Usage:
+     * ```
+     * val expected = URI("https://foo.github.io/bar")
+     * assertEquals(expected, GitHub.pages(owner = "foo", path = "bar"))
+     * ```
+     * @return The [URI] of the [path] of the GitHub [pages](https://pages.github.com) of the [owner].
+     * @throws IllegalArgumentException if [owner] is blank.
+     * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+     * @since 0.3.0
+     */
     fun pages(owner: String, path: String): URI {
         require(owner.isNotBlank()) { "The owner is blank!" }
         val builder = StringBuilder("https://$owner.github.io")

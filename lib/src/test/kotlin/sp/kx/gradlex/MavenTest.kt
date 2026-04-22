@@ -158,11 +158,11 @@ internal class MavenTest {
             "<licenses><license><url>$license</url></license></licenses>" +
             "<scm><tag>$version</tag><url>$scm</url></scm>" +
             "<developers>" +
-                "<developer>" +
-                    "<name>${developer.name}</name>" +
-                    "<email>${developer.email}</email>" +
-                    "<url>${developer.url}</url>" +
-                "</developer>" +
+            "<developer>" +
+            "<name>${developer.name}</name>" +
+            "<email>${developer.email}</email>" +
+            "<url>${developer.url}</url>" +
+            "</developer>" +
             "</developers>" +
             "</project>"
         assertEquals(expected, actual)

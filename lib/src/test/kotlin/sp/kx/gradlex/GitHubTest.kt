@@ -59,7 +59,7 @@ internal class GitHubTest {
     }
 
     @Test
-    fun pagesTest() {
+    fun pagesRepositoryTest() {
         val owner = "foo"
         val name = "bar"
         val gh = GitHub.Repository(owner = owner, name = name)
@@ -69,7 +69,7 @@ internal class GitHubTest {
     }
 
     @Test
-    fun pagesPathTest() {
+    fun pagesRepositoryPathTest() {
         val owner = "foo"
         val name = "bar"
         val gh = GitHub.Repository(owner = owner, name = name)
@@ -92,6 +92,40 @@ internal class GitHubTest {
         ).forEach { (postfix, path) ->
             val expected = URI("https://$owner.github.io/$name$postfix")
             val actual = gh.pages(path = path)
+            assertEquals(expected, actual)
+        }
+    }
+
+    @Test
+    fun pagesTest() {
+        val owner = "foo"
+        val expected = URI("https://$owner.github.io")
+        val actual = GitHub.pages(owner = owner)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun pagesPathTest() {
+        val owner = "foo"
+        listOf(
+            "" to "",
+            "" to "/",
+            "" to "//",
+            "/foo" to "foo",
+            "/foo" to "/foo",
+            "/foo" to "/foo/",
+            "/foo" to "//foo",
+            "/foo" to "foo/",
+            "/foo" to "foo//",
+            "/foo" to "/foo//",
+            "/foo" to "//foo//",
+            "/foo/bar" to "foo/bar",
+            "/foo/bar" to "/foo/bar",
+            "/foo/bar" to "/foo/bar/",
+            "/foo/bar" to "//foo/bar/",
+        ).forEach { (postfix, path) ->
+            val expected = URI("https://$owner.github.io$postfix")
+            val actual = GitHub.pages(owner = owner, path = path)
             assertEquals(expected, actual)
         }
     }

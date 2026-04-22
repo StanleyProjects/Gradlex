@@ -153,4 +153,19 @@ object GitHub {
             return owner == other.owner && name == other.name
         }
     }
+
+    fun pages(owner: String): URI {
+        require(owner.isNotBlank()) { "The owner is blank!" }
+        return URI("https://$owner.github.io")
+    }
+
+    fun pages(owner: String, path: String): URI {
+        require(owner.isNotBlank()) { "The owner is blank!" }
+        val builder = StringBuilder("https://$owner.github.io")
+        val split = path.split("/")
+        for (it in split) {
+            if (it.isNotBlank()) builder.append("/").append(it)
+        }
+        return URI(builder.toString())
+    }
 }

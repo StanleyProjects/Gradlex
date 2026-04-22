@@ -14,7 +14,7 @@ import sp.kx.gradlex.eff
 import sp.kx.gradlex.ufc
 import java.net.URI
 
-version = "0.2.1"
+version = "0.3.0"
 
 val maven = Maven.Artifact(
     group = "com.github.kepocnhh",
@@ -191,7 +191,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
         archiveClassifier = "sources"
         from(sourceSets.main.get().allSource)
     }
-    tasks.register<Jar>("assemble${variant.ufc()}Metadata") {
+    tasks.register("assemble${variant.ufc()}Metadata") {
         doLast {
             val target = buildDir().dir("yml").file("metadata.yml")
             val file = gh.assemble(version = version, target = target)
@@ -218,7 +218,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
                 "Maven ${Markdown.link("metadata", Maven.Snapshot.metadata(artifact = maven))}",
                 "maven(\"${Maven.Snapshot.Host}\")",
                 "implementation(\"${maven.moduleName(version = version)}\")",
-                "gradle lib:assemble${variant.replaceFirstChar(Char::titlecase)}Jar",
+                "gradle lib:assemble${variant.ufc()}Jar",
             )
             rootDir.resolve("README.md").check(
                 expected = expected,
@@ -248,7 +248,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
                 "Maven ${Markdown.link("metadata", Maven.Snapshot.metadata(artifact = maven))}",
                 "maven(\"${Maven.Snapshot.Host}\")",
                 "implementation(\"${maven.moduleName(version = version)}\")",
-                "gradle lib:assemble${variant.replaceFirstChar(Char::titlecase)}Jar",
+                "gradle lib:assemble${variant.ufc()}Jar",
             )
             rootDir.resolve("README.md").check(
                 expected = expected,
@@ -287,7 +287,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
                 Markdown.link(text = "Maven", uri = maven.uri(version = version)),
                 Markdown.link(text = "Docs", uri = gh.pages("docs/$version")),
                 "implementation(\"${maven.moduleName(version = version)}\")",
-                "gradle lib:assemble${variant.replaceFirstChar(Char::titlecase)}Jar",
+                "gradle lib:assemble${variant.ufc()}Jar",
             )
             rootDir.resolve("README.md").check(
                 expected = expected,

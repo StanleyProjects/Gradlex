@@ -9,6 +9,7 @@ A few Gradle extensions.
 | [GitHub](https://github.com/StanleyProjects/Gradlex/releases/tag/0.2.1)
 | [Maven](https://central.sonatype.com/artifact/com.github.kepocnhh/Gradlex/0.2.1)
 | [Docs](https://StanleyProjects.github.io/Gradlex/docs/0.2.1)
+| [Key](https://StanleyProjects.github.io/release-public.pem)
 
 ### Build
 ```

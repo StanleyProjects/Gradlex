@@ -1,12 +1,9 @@
-repositories {
-    mavenCentral()
-    maven("https://central.sonatype.com/repository/maven-snapshots/")
-}
+repositories.mavenCentral()
 
 plugins {
     `kotlin-dsl`
 }
 
 dependencies {
-    implementation("com.github.kepocnhh:Gradlex:0.0.7-SNAPSHOT")
+    implementation("com.github.kepocnhh:Gradlex:0.1.0")
 }

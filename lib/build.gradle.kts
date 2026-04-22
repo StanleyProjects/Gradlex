@@ -14,9 +14,8 @@ import sp.kx.gradlex.create
 import sp.kx.gradlex.dir
 import sp.kx.gradlex.eff
 import sp.kx.gradlex.get
-import java.net.URI
 
-version = "0.1.0"
+version = "0.1.1"
 
 val maven = Maven.Artifact(
     group = "com.github.kepocnhh",
@@ -37,6 +36,10 @@ plugins {
     id("org.jetbrains.dokka") version Version.dokka
 }
 
+tasks.getByName<JavaCompile>("compileJava") {
+    targetCompatibility = Version.jvmTarget
+}
+
 val compileKotlinTask = tasks.getByName<KotlinCompile>("compileKotlin") {
     kotlinOptions {
         jvmTarget = Version.jvmTarget
@@ -53,6 +56,7 @@ tasks.getByName<KotlinCompile>("compileTestKotlin") {
 }
 
 dependencies {
+    if (Version.gradle != gradle.gradleVersion) error("Gradle version: ${gradle.gradleVersion}!")
     implementation(gradleApi())
     testImplementation("org.junit.jupiter:junit-jupiter-api:${Version.jupiter}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Version.jupiter}")
@@ -64,7 +68,7 @@ fun Test.getExecutionData(): File {
         .asFile("$name.exec")
 }
 
-val taskUnitTest = task<Test>("checkUnitTest") {
+val taskUnitTest: Test = tasks.register<Test>("checkUnitTest") {
     useJUnitPlatform()
     testClassesDirs = sourceSets.test.get().output.classesDirs
     classpath = sourceSets.test.get().runtimeClasspath
@@ -72,11 +76,11 @@ val taskUnitTest = task<Test>("checkUnitTest") {
     doLast {
         getExecutionData().eff()
     }
-}
+}.get()
 
 jacoco.toolVersion = Version.jacoco
 
-val taskCoverageReport = task<JacocoReport>("assembleCoverageReport") {
+val taskCoverageReport: JacocoReport = tasks.register<JacocoReport>("assembleCoverageReport") {
     dependsOn(taskUnitTest)
     reports {
         csv.required = false
@@ -92,9 +96,9 @@ val taskCoverageReport = task<JacocoReport>("assembleCoverageReport") {
             .eff("index.html")
         println("Coverage report: ${report.absolutePath}")
     }
-}
+}.get()
 
-task<JacocoCoverageVerification>("checkCoverage") {
+tasks.register<JacocoCoverageVerification>("checkCoverage") {
     dependsOn(taskCoverageReport)
     violationRules {
         rule {
@@ -107,7 +111,7 @@ task<JacocoCoverageVerification>("checkCoverage") {
     executionData(taskCoverageReport.executionData)
 }
 
-task<Detekt>("checkCodeQuality") {
+tasks.register<Detekt>("checkCodeQuality") {
     buildUponDefaultConfig = true
     allRules = true
     jvmTarget = Version.jvmTarget
@@ -135,7 +139,7 @@ task<Detekt>("checkCodeQuality") {
     }
 }
 
-task<Detekt>("checkDocs") {
+tasks.register<Detekt>("checkDocs") {
     buildUponDefaultConfig = false
     allRules = false
     jvmTarget = Version.jvmTarget
@@ -258,7 +262,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
     tasks.create("assemble", variant, "Pom") {
         doLast {
             val target = buildDir().dir("libs").file("${maven.name(version = version)}.pom")
-            val license = URI("${gh.uri()}/blob/$version/LICENSE")
+            val license = gh.uri("blob/$version/LICENSE")
             val developer = "Stanley Wintergreen" // todo
             val text = maven.pom(
                 version = version,
@@ -277,9 +281,8 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
         doLast {
             val expected = setOf(
                 Markdown.link(text = "GitHub", uri = gh.release(version = version)),
-//                "Maven ${Markdown.link(text = version, uri = maven.uri(version = version))}", // todo
-                Markdown.link(text = "Maven", uri = URI("https://central.sonatype.com/artifact/${maven.group}/${maven.id}/$version")), // todo
-                Markdown.link(text = "Docs", uri = URI("${gh.pages()}/docs/$version")), // todo docs
+                Markdown.link(text = "Maven", uri = maven.uri(version = version)),
+                Markdown.link(text = "Docs", uri = gh.pages("docs/$version")),
                 "implementation(\"${maven.moduleName(version = version)}\")",
                 "gradle lib:assemble${variant.replaceFirstChar(Char::titlecase)}Jar",
             )
@@ -300,7 +303,7 @@ fun tasks(variant: String, version: String, maven: Maven.Artifact, gh: GitHub.Re
             reportUndocumented = false
             sourceLink {
                 localDirectory = file(path)
-                remoteUrl = URI("${gh.uri()}/tree/${moduleVersion.get()}/lib/$path").toURL() // todo
+                remoteUrl = gh.uri("tree/${moduleVersion.get()}/lib/$path").toURL()
             }
             jdkVersion = Version.jvmTarget.toInt()
         }

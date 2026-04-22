@@ -23,6 +23,22 @@ private fun checkRegexes(actual: List<String>, regexes: Set<Regex>): Set<String>
     }.toSet()
 }
 
+/**
+ * Usage:
+ * ```
+ * File("/tmp/bar").check(
+ *     expected = setOf("foo", "bar"),
+ *     report = File("/tmp/report"),
+ *     expected = setOf("^f\\w\\d".toRegex()),
+ * )
+ * ```
+ * @receiver The [File] whose contents will be checked.
+ * @param expected The set of strings expected to be in [this] receiver [File].
+ * @param report Where the test result will be written.
+ * @param regexes The set of [Regex] that will match the lines in [this] receiver [File].
+ * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+ * @since 0.1.0
+ */
 fun File.check(
     expected: Set<String>,
     report: File,
@@ -61,11 +77,35 @@ fun File.check(
     error("Problems were found while checking the \"$name\". See the report ${report.absolutePath}")
 }
 
+/**
+ * Usage:
+ * ```
+ * val file = File("/tmp/bar").file()
+ * assertTrue(file.isFile)
+ * ```
+ * @return [this] receiver [File].
+ * @throws IllegalStateException if [this] receiver [File] is not a normal file.
+ * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+ * @since 0.1.0
+ */
 fun File.file(): File {
     check(isFile) { "Location \"$absolutePath\" is not a file!" }
     return this
 }
 
+/**
+ * Usage:
+ * ```
+ * val text = "foo"
+ * val file = File("/tmp/bar").assemble(text)
+ * assertEquals(text, file.readText())
+ * ```
+ * @receiver The [File] to which the [text] will be written.
+ * @throws IllegalArgumentException if [text] is empty.
+ * @throws IllegalStateException if [this] receiver [File] exists and not a file.
+ * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+ * @since 0.1.0
+ */
 fun File.assemble(text: String) {
     require(text.isNotEmpty())
     if (exists()) {
@@ -83,15 +123,45 @@ fun File.assemble(text: String) {
     writeText(text)
 }
 
+/**
+ * Usage:
+ * ```
+ * val text = "foo"
+ * val file = layout.buildDirectory.get()
+ *     .dir("bar")
+ *     .file("baz")
+ *     .assemble(text)
+ * assertEquals(text, file.readText())
+ * ```
+ * @receiver The [RegularFile] to which the [text] will be written.
+ * @return The [File] of [this] receiver [RegularFile].
+ * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+ * @since 0.1.0
+ */
 fun RegularFile.assemble(text: String): File {
     val file = asFile
     file.assemble(text)
     return file
 }
 
+/**
+ * Usage:
+ * ```
+ * val file = File("/tmp/bar").eff()
+ * assertTrue(file.exists())
+ * assertTrue(file.isFile)
+ * assertTrue(file.length() > 0)
+ * ```
+ * @return [this] receiver file.
+ * @throws IllegalStateException if [this] receiver file does not exist.
+ * @throws IllegalStateException if [this] receiver file is not a normal file.
+ * @throws IllegalStateException if [this] receiver file is empty.
+ * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+ * @since 0.1.0
+ */
 fun File.eff(): File {
-    if (!exists()) error("Location \"$absolutePath\" does not exist!")
-    if (!isFile) error("Location \"$absolutePath\" is not a file!")
-    if (length() == 0L) error("File \"$absolutePath\" is empty!")
+    check(exists()) { "Location \"$absolutePath\" does not exist!" }
+    check(isFile) { "Location \"$absolutePath\" is not a file!" }
+    check(length() > 0) { "File \"$absolutePath\" is empty!" }
     return this
 }

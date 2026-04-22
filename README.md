@@ -3,9 +3,30 @@ A few Gradle extensions.
 
 ---
 
+## Release
+
+`0.1.0`
+| [GitHub](https://github.com/StanleyProjects/Gradlex/releases/tag/0.1.0)
+| [Maven](https://central.sonatype.com/artifact/com.github.kepocnhh/Gradlex/0.1.0)
+| [Docs](https://StanleyProjects.github.io/Gradlex/docs/0.1.0)
+
+### Build
+```
+$ gradle lib:assembleReleaseJar
+```
+
+### Import
+```kotlin
+dependencies {
+    implementation("com.github.kepocnhh:Gradlex:0.1.0")
+}
+```
+
+---
+
 ## Snapshot
 
-> GitHub [0.0.7-SNAPSHOT](https://github.com/StanleyProjects/Gradlex/releases/tag/0.0.7-SNAPSHOT) release
+> GitHub [0.1.0-SNAPSHOT](https://github.com/StanleyProjects/Gradlex/releases/tag/0.1.0-SNAPSHOT) release
 >
 > Maven [metadata](https://central.sonatype.com/repository/maven-snapshots/com/github/kepocnhh/Gradlex/maven-metadata.xml)
 
@@ -21,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.kepocnhh:Gradlex:0.0.7-SNAPSHOT")
+    implementation("com.github.kepocnhh:Gradlex:0.1.0-SNAPSHOT")
 }
 ```
 
@@ -29,7 +50,7 @@ dependencies {
 
 ## Unstable
 
-> GitHub [0.1.0u-SNAPSHOT](https://github.com/StanleyProjects/Gradlex/releases/tag/0.1.0u-SNAPSHOT) release
+> GitHub [0.1.1u-SNAPSHOT](https://github.com/StanleyProjects/Gradlex/releases/tag/0.1.1u-SNAPSHOT) release
 > 
 > Maven [metadata](https://central.sonatype.com/repository/maven-snapshots/com/github/kepocnhh/Gradlex/maven-metadata.xml)
 
@@ -45,7 +66,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.kepocnhh:Gradlex:0.1.0u-SNAPSHOT")
+    implementation("com.github.kepocnhh:Gradlex:0.1.1u-SNAPSHOT")
 }
 ```
 

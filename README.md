@@ -26,7 +26,7 @@ dependencies {
 
 ## Snapshot
 
-> GitHub [0.1.0-SNAPSHOT](https://github.com/StanleyProjects/Gradlex/releases/tag/0.1.0-SNAPSHOT) release
+> GitHub [0.2.1-SNAPSHOT](https://github.com/StanleyProjects/Gradlex/releases/tag/0.2.1-SNAPSHOT) release
 >
 > Maven [metadata](https://central.sonatype.com/repository/maven-snapshots/com/github/kepocnhh/Gradlex/maven-metadata.xml)
 
@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.kepocnhh:Gradlex:0.1.0-SNAPSHOT")
+    implementation("com.github.kepocnhh:Gradlex:0.2.1-SNAPSHOT")
 }
 ```
 

@@ -12,6 +12,7 @@ import java.io.File
 internal class FinalProjectLayout(
     private val objectFactory: ObjectFactory,
     private val projectDirectory: Directory,
+    private val settingsDirectory: Directory,
 ) : ProjectLayout {
     override fun getProjectDirectory(): Directory {
         return projectDirectory
@@ -31,5 +32,9 @@ internal class FinalProjectLayout(
 
     override fun files(vararg paths: Any?): FileCollection {
         return projectDirectory.files(*paths)
+    }
+
+    override fun getSettingsDirectory(): Directory {
+        return settingsDirectory
     }
 }

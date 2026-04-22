@@ -42,6 +42,7 @@ val Project.buildSrc: ProjectLayout get() {
     return FinalProjectLayout(
         objectFactory = rootProject.objects,
         projectDirectory = rootProject.layout.projectDirectory.dir("buildSrc"),
+        settingsDirectory = rootProject.layout.projectDirectory,
     )
 }
 

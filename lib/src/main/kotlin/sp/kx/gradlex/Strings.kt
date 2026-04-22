@@ -14,11 +14,39 @@ package sp.kx.gradlex
 fun camelCase(n0: String, n1: String, vararg other: String): String {
     require(n0.isNotBlank()) { "The first segment is blank!" }
     val builder = StringBuilder(n0)
-    builder.append(n1.replaceFirstChar(Char::titlecase))
+    builder.append(n1.ufc())
     for (it in other) {
         if (it.isNotBlank()) {
-            builder.append(it.replaceFirstChar(Char::titlecase))
+            builder.append(it.ufc())
         }
     }
     return builder.toString()
+}
+
+/**
+ * Usage:
+ * ```
+ * val actual = "fooBarBaz".ufc()
+ * assertEquals("FooBarBaz", actual)
+ * ```
+ * @return The [String] in which the first character in [this] receiver to the [Character.toTitleCase].
+ * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+ * @since 0.2.1
+ */
+fun String.tfc(): String {
+    return replaceFirstChar(Character::toTitleCase)
+}
+
+/**
+ * Usage:
+ * ```
+ * val actual = "fooBarBaz".ufc()
+ * assertEquals("FooBarBaz", actual)
+ * ```
+ * @return The [String] in which the first character in [this] receiver to the [Character.toUpperCase].
+ * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+ * @since 0.2.1
+ */
+fun String.ufc(): String {
+    return replaceFirstChar(Character::toUpperCase)
 }

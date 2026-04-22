@@ -123,7 +123,7 @@ object Maven {
             licenses: Set<URI>,
             scm: URI,
             tag: String = version,
-            developers: Set<String>,
+            developers: Set<Developer>,
             modelVersion: String = "4.0.0",
         ): String {
             require(modelVersion.isNotBlank()) { "The model version is blank!" }
@@ -134,7 +134,6 @@ object Maven {
             require(tag.isNotBlank()) { "The tag is blank!" }
             require(licenses.isNotEmpty()) { "No licenses!" }
             require(developers.isNotEmpty()) { "No developers!" }
-            require(developers.none { it.isBlank() }) { "Wrong developers!" }
             val host = URI("http://maven.apache.org")
             val url = URI("$host/POM/$modelVersion")
             val project = setOf(
@@ -155,7 +154,19 @@ object Maven {
                 "url" to uri.toString(),
                 "licenses" to licenses.joinToString { "<license><url>$it</url></license>" },
                 "scm" to "<tag>$tag</tag><url>$scm</url>",
-                "developers" to developers.joinToString { "<developer><name>$it</name></developer>" },
+                "developers" to developers.joinToString { developer ->
+                    val builder = StringBuilder()
+                    builder.append("<developer>")
+                    builder.append("<name>${developer.name}</name>")
+                    if (developer.email != null) {
+                        builder.append("<email>${developer.email}</email>")
+                    }
+                    if (developer.url != null) {
+                        builder.append("<url>${developer.url}</url>")
+                    }
+                    builder.append("</developer>")
+                    builder.toString()
+                },
             ).joinToString(
                 prefix = "<project $project>",
                 separator = "",
@@ -262,6 +273,29 @@ object Maven {
         override fun equals(other: Any?): Boolean {
             if (other !is Artifact) return false
             return group == other.group && id == other.id
+        }
+    }
+
+    /**
+     * Encapsulates data about a [developer](https://maven.apache.org/pom.html#Developers).
+     * @property name The developer's name.
+     * @property email The developer's email.
+     * @property url The developer's online address.
+     * @throws IllegalArgumentException if [name] is blank.
+     * @throws IllegalArgumentException if [email] not `null` and [email] is blank.
+     * @author [Stanley Wintergreen](https://github.com/kepocnhh)
+     * @since 0.1.0
+     */
+    data class Developer(
+        val name: String,
+        val email: String? = null,
+        val url: URI? = null,
+    ) {
+        init {
+            require(name.isNotBlank()) { "The name is blank!" }
+            if (email != null) {
+                require(email.isNotBlank()) { "The email is blank!" }
+            }
         }
     }
 

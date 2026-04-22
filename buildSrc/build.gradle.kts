@@ -1,6 +1,6 @@
 repositories {
     mavenCentral()
-    maven("https://central.sonatype.com/repository/maven-snapshots/")
+    maven("https://central.sonatype.com/repository/maven-snapshots")
 }
 
 plugins {
@@ -8,5 +8,5 @@ plugins {
 }
 
 dependencies {
-    implementation("com.github.kepocnhh:Gradlex:0.0.7-SNAPSHOT")
+    implementation("com.github.kepocnhh:Gradlex:0.2.1u-SNAPSHOT")
 }

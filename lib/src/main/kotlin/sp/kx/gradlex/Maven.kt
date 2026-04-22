@@ -265,6 +265,16 @@ object Maven {
         }
     }
 
+    data class Developer(
+        val name: String,
+        val email: String? = null,
+        val uri: URI? = null,
+    ) {
+        init {
+            require(name.isNotBlank()) { "The name is blank!" }
+        }
+    }
+
     /**
      * A set of functions and types for working with
      * Maven snapshot [repositories](https://central.sonatype.com/repository/maven-snapshots).

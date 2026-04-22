@@ -132,7 +132,11 @@ internal class MavenTest {
         val uri = URI("https://foo.com")
         val license = URI("https://foo.com/license")
         val scm = URI("https://foo.com/scm")
-        val developer = "test developer"
+        val developer = Maven.Developer(
+            name = "John Doe",
+            email = "johndoe@mail.org",
+            url = URI("https://github.com/johndoe"),
+        )
         val actual = issuer.pom(
             version = version,
             packaging = packaging,
@@ -153,7 +157,13 @@ internal class MavenTest {
             "<url>$uri</url>" +
             "<licenses><license><url>$license</url></license></licenses>" +
             "<scm><tag>$version</tag><url>$scm</url></scm>" +
-            "<developers><developer><name>$developer</name></developer></developers>" +
+            "<developers>" +
+                "<developer>" +
+                    "<name>${developer.name}</name>" +
+                    "<email>${developer.email}</email>" +
+                    "<url>${developer.url}</url>" +
+                "</developer>" +
+            "</developers>" +
             "</project>"
         assertEquals(expected, actual)
     }
@@ -166,7 +176,11 @@ internal class MavenTest {
         val uri = URI("https://foo.com")
         val license = URI("https://foo.com/license")
         val scm = URI("https://foo.com/scm")
-        val developer = "test developer"
+        val developer = Maven.Developer(
+            name = "John Doe",
+            email = "johndoe@mail.org",
+            url = URI("https://github.com/johndoe"),
+        )
         assertThrows(IllegalArgumentException::class.java) {
             issuer.pom(
                 version = "baz",
@@ -249,16 +263,6 @@ internal class MavenTest {
                 licenses = setOf(license),
                 scm = scm,
                 developers = setOf(),
-            )
-        }
-        assertThrows(IllegalArgumentException::class.java) {
-            issuer.pom(
-                version = "baz",
-                packaging = "jar",
-                uri = uri,
-                licenses = setOf(license),
-                scm = scm,
-                developers = setOf(""),
             )
         }
     }
